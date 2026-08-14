@@ -1,0 +1,17 @@
+.root {
+  position: relative;
+  min-height: clamp(34rem, 48vw, 52rem);
+  overflow: clip;
+  background: #050403;
+  isolation: isolate;
+}
+
+/*
+  Gate 8 owns:
+  - footer-terrain.png environmental layer
+  - live metal/glass signs and poles
+  - staggered social markers
+  - actual logo.png
+  - engraved Option A plaque asset
+  - mobile horizontal draggable sign rail
+*/
