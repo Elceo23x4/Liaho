@@ -1,0 +1,32 @@
+.root {
+  position: relative;
+  min-height: 900vh;
+  background: var(--color-ink);
+}
+
+.stickyStage {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  overflow: clip;
+  isolation: isolate;
+}
+
+.semanticContent {
+  position: relative;
+  z-index: 3;
+}
+
+.instrumentStage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/*
+  Gate 8 owns the visual/motion implementation.
+  BODY architecture is already locked:
+  REVEAL → LOCK → HOLD → HANDOFF, cumulative component stack,
+  outline typography above instrument at intersections, final TS_comp cross-resolve.
+*/

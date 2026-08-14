@@ -1,0 +1,87 @@
+import type { BodyStage } from "@/types/landing";
+
+export const BODY_SCROLL_VH = 900;
+
+export const bodyTimeline: readonly BodyStage[] = [
+  {
+    index: 1,
+    asset: "TS_hand.png",
+    reveal: [0, 8],
+    hold: [8, 10],
+    entry: { yVh: -22, opacity: [0, 1], scale: [0.98, 1] },
+    direction: "descend-from-above",
+  },
+  {
+    index: 2,
+    asset: "TS_optics.png",
+    reveal: [10, 18],
+    hold: [18, 20],
+    entry: { yVh: -18, opacity: [0, 1] },
+    direction: "upper-viewport-to-optical-axis",
+  },
+  {
+    index: 3,
+    asset: "TS_left.png",
+    reveal: [20, 28],
+    hold: [28, 30],
+    entry: { xVw: -34, rotateDeg: [-1.2, 0] },
+    direction: "far-left-to-lock",
+  },
+  {
+    index: 4,
+    asset: "TS_right.png",
+    reveal: [30, 38],
+    hold: [38, 40],
+    entry: { xVw: 34, rotateDeg: [1.2, 0] },
+    direction: "far-right-to-lock",
+  },
+  {
+    index: 5,
+    asset: "TS_lens.png",
+    reveal: [40, 48],
+    hold: [48, 50],
+    entry: { xVw: 12, yVh: -8, scale: [0.9, 1] },
+    direction: "diagonal-forward-optical-axis",
+  },
+  {
+    index: 6,
+    asset: "TS_core.png",
+    reveal: [50, 58],
+    hold: [58, 60],
+    entry: { yVh: 3, opacity: [0, 1], scale: [0.94, 1] },
+    direction: "restrained-central-depth",
+  },
+  {
+    index: 7,
+    asset: "TS_disp.png",
+    reveal: [60, 68],
+    hold: [68, 70],
+    entry: { xVw: 12, yVh: 15, scale: [0.92, 1] },
+    direction: "lower-right-front",
+  },
+  {
+    index: 8,
+    asset: "TS_base.png",
+    reveal: [70, 78],
+    hold: [78, 80],
+    entry: { yVh: 24, rotateDeg: [1.5, 0] },
+    direction: "rise-from-below",
+  },
+  {
+    index: 9,
+    asset: "TS_foot.png",
+    reveal: [80, 88],
+    hold: [88, 90],
+    entry: { yVh: 30, opacity: [0, 1] },
+    direction: "vertical-rise",
+  },
+  {
+    index: 10,
+    asset: "TS_comp.png",
+    reveal: [88, 100],
+    hold: [100, 100],
+    entry: { opacity: [0, 1] },
+    direction: "settle-then-cross-resolve",
+    crossResolve: [90, 100],
+  },
+] as const;
