@@ -1,0 +1,24 @@
+.root {
+  position: relative;
+  min-height: 100svh;
+  isolation: isolate;
+}
+
+.semanticCopy {
+  position: absolute;
+  inset: 0 auto auto 0;
+}
+
+.semanticCopy > * {
+  margin: 0;
+}
+
+/*
+  Gate 8 owns the high-fidelity HERO implementation:
+  - sculpted pearl rim / bridge / compass dock
+  - pointer-X video scrub (0.2s—9.8s)
+  - mobile horizontal drag
+  - editorial rail
+  - Lagos blueprint map trigger
+  - exact reference parity
+*/
