@@ -4,6 +4,9 @@ import { constants } from "node:fs";
 const required = [
   "public/brand/logo.png",
   "public/media/hero/Liahona_hero.mp4",
+  "public/media/hero/Liahona_hero_scrub.mp4",
+  "public/media/hero/Liahona_hero_poster.webp",
+  "public/images/hero/hero-topography.svg",
   "public/images/body/TS_hand.png",
   "public/images/body/TS_optics.png",
   "public/images/body/TS_left.png",
@@ -18,8 +21,6 @@ const required = [
 ];
 
 const pending = [
-  "public/media/hero/Liahona_hero_scrub.mp4",
-  "public/media/hero/Liahona_hero_poster.webp",
   "public/images/body/body-background.webp",
   "public/images/footer/footer-engraved-plaque.webp",
 ];
@@ -34,7 +35,6 @@ async function exists(path) {
 }
 
 let failed = false;
-
 for (const path of required) {
   if (!(await exists(path))) {
     console.error(`MISSING REQUIRED: ${path}`);
@@ -43,13 +43,8 @@ for (const path of required) {
     console.log(`OK: ${path}`);
   }
 }
-
 for (const path of pending) {
-  if (!(await exists(path))) {
-    console.warn(`PENDING OPTIMIZED ASSET: ${path}`);
-  } else {
-    console.log(`OK: ${path}`);
-  }
+  if (!(await exists(path))) console.warn(`PENDING ASSET: ${path}`);
+  else console.log(`OK: ${path}`);
 }
-
 if (failed) process.exit(1);
