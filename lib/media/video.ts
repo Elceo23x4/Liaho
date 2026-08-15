@@ -1,6 +1,7 @@
 export const HERO_VIDEO = {
   source: "/media/hero/Liahona_hero.mp4",
   optimizedSource: "/media/hero/Liahona_hero_scrub.mp4",
+  poster: "/media/hero/Liahona_hero_poster.webp",
   startSeconds: 0.2,
   endSeconds: 9.8,
   interpolation: 0.08,
