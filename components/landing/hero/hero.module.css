@@ -791,3 +791,127 @@
   :global(.map-panel header) { padding: 20px; }
   :global(.map-stage) { inset: 104px 0 0; }
 }
+
+/* Gate 8 HERO parity refinement — exact Figma geometry exports */
+
+.pearlRim {
+  display: none;
+}
+
+.pearlRimSvg {
+  position: absolute;
+  left: 3.333333%;
+  top: 9.259259%;
+  width: 93.333333%;
+  height: 80.925926%;
+  pointer-events: none;
+  z-index: 5;
+  max-width: none;
+}
+
+:global(.figma-nav-bridge) {
+  position: absolute;
+  left: -3.157895%;
+  top: -20%;
+  width: 106.315789%;
+  height: 152.307692%;
+  max-width: none;
+  pointer-events: none;
+}
+
+:global(.dock-material) {
+  position: absolute;
+  left: -28.235294%;
+  top: -4.516129%;
+  width: 157.352941%;
+  height: 112.903226%;
+  max-width: none;
+  pointer-events: none;
+}
+
+:global(.dock-button) {
+  left: 16.5%;
+  top: 51.3%;
+  width: 67%;
+  height: auto;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+
+:global(.figma-blog-material) {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+:global(.figma-blog-material img) {
+  position: absolute;
+  max-width: none;
+}
+
+:global(.figma-blog-pod) {
+  left: .7%;
+  top: 0;
+  width: 12.6%;
+  height: 97.27%;
+}
+
+:global(.figma-blog-rail) {
+  left: 8.8%;
+  top: 5.91%;
+  width: 89.5%;
+  height: 94.09%;
+}
+
+:global(.figma-blog-junction) {
+  left: 8.2%;
+  top: 14.55%;
+  width: 4.1%;
+  height: 78.64%;
+}
+
+:global(.figma-blog-highlight) {
+  left: 12.4%;
+  top: 11.36%;
+  width: 84.3%;
+  height: 27.27%;
+}
+
+:global(.blog-material) {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  .pearlRimSvg {
+    left: 1.7%;
+    top: 5.6%;
+    width: 96.6%;
+    height: 73.7%;
+  }
+
+  :global(.dock-material) {
+    display: none;
+  }
+
+  :global(.figma-blog-pod),
+  :global(.figma-blog-junction) {
+    display: none;
+  }
+
+  :global(.figma-blog-rail) {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(.figma-blog-highlight) {
+    left: 8%;
+    top: 7%;
+    width: 84%;
+    height: 23%;
+  }
+}

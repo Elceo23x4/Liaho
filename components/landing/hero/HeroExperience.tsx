@@ -84,7 +84,13 @@ export function HeroExperience() {
             <div className={styles.groundLift} aria-hidden="true" />
           </div>
 
-          <div className={styles.pearlRim} aria-hidden="true" />
+          <img
+            className={styles.pearlRimSvg}
+            src="/images/hero/figma-hero-rim.svg"
+            alt=""
+            aria-hidden="true"
+            draggable={false}
+          />
 
           <div className={styles.dock}>
             <CompassDock onOpen={() => setMapOpen(true)} />
