@@ -1,0 +1,13 @@
+In components/landing/hero/HeroExperience.tsx replace:
+
+<div className={styles.pearlRim} aria-hidden="true" />
+
+with:
+
+<img
+  className={styles.pearlRimSvg}
+  src="/images/hero/figma-hero-rim.svg"
+  alt=""
+  aria-hidden="true"
+  draggable={false}
+/>
