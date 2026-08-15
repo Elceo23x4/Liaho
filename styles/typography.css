@@ -1,0 +1,19 @@
+body {
+  letter-spacing: -0.01em;
+}
+
+[data-type="editorial"] {
+  font-family: var(--font-editorial);
+  font-weight: 400;
+}
+
+[data-type="condensed"] {
+  font-family: var(--font-condensed-display);
+  text-transform: uppercase;
+}
+
+[data-type="technical"] {
+  font-family: var(--font-technical);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}

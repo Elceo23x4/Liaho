@@ -1,0 +1,29 @@
+:root {
+  --color-ink: #090706;
+  --color-ink-soft: #15110f;
+  --color-paper: #eee5d5;
+  --color-parchment: #d2c3aa;
+  --color-pearl: #f3ede5;
+  --color-rust: #c74626;
+  --color-rust-deep: #8f2f1b;
+  --color-amber: #d65b1d;
+  --color-grid: rgb(238 229 213 / 0.14);
+  --color-line: rgb(238 229 213 / 0.28);
+
+  --font-body: var(--font-instrument), "Arial Narrow", sans-serif;
+  --font-editorial: var(--font-playfair), Georgia, serif;
+  --font-condensed-display: var(--font-condensed), Impact, sans-serif;
+  --font-technical: var(--font-mono), ui-monospace, monospace;
+
+  --page-gutter: clamp(1rem, 4vw, 5rem);
+  --content-max: 120rem;
+
+  --z-background: 0;
+  --z-instrument: 20;
+  --z-outline-type: 30;
+  --z-copy: 40;
+  --z-controls: 50;
+  --z-overlay: 100;
+
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+}

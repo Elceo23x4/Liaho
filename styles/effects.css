@@ -1,0 +1,9 @@
+:root {
+  --shadow-soft: 0 24px 80px rgb(0 0 0 / 0.24);
+  --shadow-deep: 0 36px 120px rgb(0 0 0 / 0.44);
+  --glass-border: 1px solid rgb(255 255 255 / 0.24);
+}
+
+[data-motion="reduced"] [data-motion-only="true"] {
+  display: none !important;
+}
