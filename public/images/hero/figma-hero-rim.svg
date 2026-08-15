@@ -1,0 +1,29 @@
+<svg width="1792" height="874" viewBox="0 0 1792 874" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_74_157)">
+<g clip-path="url(#clip0_74_157)">
+<path d="M1688 22H104C63.1309 22 30 55.1309 30 96V762C30 802.869 63.1309 836 104 836H1688C1728.87 836 1762 802.869 1762 762V96C1762 55.1309 1728.87 22 1688 22Z" stroke="#FFFAF1" stroke-width="8"/>
+<path d="M1688 26H104C65.3401 26 34 57.3401 34 96V762C34 800.66 65.3401 832 104 832H1688C1726.66 832 1758 800.66 1758 762V96C1758 57.3401 1726.66 26 1688 26Z" stroke="url(#paint0_linear_74_157)" stroke-width="4"/>
+<path d="M1687 31H105C68.5492 31 39 60.5492 39 97V761C39 797.451 68.5492 827 105 827H1687C1723.45 827 1753 797.451 1753 761V97C1753 60.5492 1723.45 31 1687 31Z" stroke="#FFFDF7" stroke-opacity="0.78" stroke-width="1.5"/>
+<path d="M114 26H1676" stroke="url(#paint1_linear_74_157)" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M164 831H1626" stroke="#FFFAF0" stroke-opacity="0.52" stroke-width="2" stroke-linecap="round"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_74_157" x="0" y="0" width="1792" height="874" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="8"/>
+<feGaussianBlur stdDeviation="13"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.17 0 0 0 0 0.13 0 0 0 0 0.1 0 0 0 0.23 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_74_157"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_74_157" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_74_157" x1="34" y1="26" x2="652.46" y2="1348.86" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFFDF8"/><stop offset="0.18" stop-color="#D7CFC3"/><stop offset="0.52" stop-color="#8E857A"/><stop offset="0.79" stop-color="#EEE8DE"/><stop offset="1" stop-color="#B2A79A"/>
+</linearGradient>
+<linearGradient id="paint1_linear_74_157" x1="114" y1="26" x2="1676" y2="26" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.08"/><stop offset="0.28" stop-color="white" stop-opacity="0.92"/><stop offset="0.54" stop-color="white" stop-opacity="0.18"/><stop offset="0.82" stop-color="white" stop-opacity="0.85"/><stop offset="1" stop-color="white" stop-opacity="0.06"/>
+</linearGradient>
+<clipPath id="clip0_74_157"><rect width="1740" height="822" fill="white" transform="translate(26 18)"/></clipPath>
+</defs>
+</svg>
