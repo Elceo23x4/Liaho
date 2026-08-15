@@ -1,4 +1,4 @@
 export async function loadMapLibre() {
-  const module = await import("maplibre-gl");
-  return module;
+  const maplibre = await import("maplibre-gl");
+  return maplibre;
 }

@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
-import { landingContent } from "@/content/landing";
 import { LagosMapOverlay } from "@/components/landing/map/LagosMapOverlay";
+import { landingContent } from "@/content/landing";
 
 import { CompassDock } from "./CompassDock";
 import { CompassMedallion } from "./CompassMedallion";
@@ -84,11 +85,14 @@ export function HeroExperience() {
             <div className={styles.groundLift} aria-hidden="true" />
           </div>
 
-          <img
+          <Image
             className={styles.pearlRimSvg}
             src="/images/hero/figma-hero-rim.svg"
             alt=""
             aria-hidden="true"
+            width={1792}
+            height={874}
+            unoptimized
             draggable={false}
           />
 
@@ -124,7 +128,9 @@ export function HeroExperience() {
 
           <div className={styles.mobileDragHint} aria-hidden="true">
             <span>DRAG TO EXPLORE</span>
-            <span className={styles.mobileTrack}><i /></span>
+            <span className={styles.mobileTrack}>
+              <i />
+            </span>
           </div>
         </div>
       </section>
