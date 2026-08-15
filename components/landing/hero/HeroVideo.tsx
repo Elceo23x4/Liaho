@@ -43,12 +43,20 @@ export const HeroVideo = forwardRef<HeroVideoHandle, Props>(function HeroVideo(
 
     const duration = HERO_VIDEO.endSeconds - HERO_VIDEO.startSeconds;
 
+    const initialize = () => {
+      video.pause();
+      video.currentTime = HERO_VIDEO.startSeconds;
+      video.dataset.mediaReady = "true";
+    };
+
     const tick = () => {
       const current = renderedProgressRef.current;
       const target = targetProgressRef.current;
       const next = current + (target - current) * HERO_VIDEO.interpolation;
 
-      renderedProgressRef.current = Math.abs(target - next) < 0.0005 ? target : next;
+      renderedProgressRef.current =
+        Math.abs(target - next) < 0.0005 ? target : next;
+
       const targetTime =
         HERO_VIDEO.startSeconds + renderedProgressRef.current * duration;
 
@@ -64,18 +72,17 @@ export const HeroVideo = forwardRef<HeroVideoHandle, Props>(function HeroVideo(
       rafRef.current = requestAnimationFrame(tick);
     };
 
-    const initialize = () => {
-      video.pause();
-      video.currentTime = HERO_VIDEO.startSeconds;
-    };
-
-    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) initialize();
-    else video.addEventListener("loadedmetadata", initialize, { once: true });
+    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
+      initialize();
+    } else {
+      video.addEventListener("loadedmetadata", initialize, { once: true });
+    }
 
     rafRef.current = requestAnimationFrame(tick);
 
     return () => {
       video.removeEventListener("loadedmetadata", initialize);
+      delete video.dataset.mediaReady;
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
   }, [onProgress]);
@@ -90,6 +97,7 @@ export const HeroVideo = forwardRef<HeroVideoHandle, Props>(function HeroVideo(
       poster={HERO_VIDEO.poster}
       tabIndex={-1}
       data-hero-video
+      data-media-ready="false"
     >
       <source src={HERO_VIDEO.optimizedSource} type="video/mp4" />
       <source src={HERO_VIDEO.source} type="video/mp4" />

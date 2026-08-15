@@ -1,7 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 
 import { LagosMapOverlay } from "@/components/landing/map/LagosMapOverlay";
 import { landingContent } from "@/content/landing";
@@ -20,6 +25,17 @@ export function HeroExperience() {
   const dragRef = useRef<{ x: number; y: number; progress: number } | null>(null);
   const [mapOpen, setMapOpen] = useState(false);
 
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    root.dataset.hydrated = "true";
+
+    return () => {
+      delete root.dataset.hydrated;
+    };
+  }, []);
+
   const handleProgress = (next: number) => {
     rootRef.current?.style.setProperty("--scrub-progress", String(next));
   };
@@ -35,10 +51,11 @@ export function HeroExperience() {
     }
 
     const drag = dragRef.current;
-    if (!drag || event.pointerId === undefined) return;
+    if (!drag) return;
 
     const dx = event.clientX - drag.x;
     const dy = event.clientY - drag.y;
+
     if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
       event.preventDefault();
       const bounds = root.getBoundingClientRect();
@@ -48,11 +65,13 @@ export function HeroExperience() {
 
   const onPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
     if (event.pointerType !== "touch") return;
+
     dragRef.current = {
       x: event.clientX,
       y: event.clientY,
       progress: videoRef.current?.getProgress() ?? 0,
     };
+
     event.currentTarget.setPointerCapture?.(event.pointerId);
   };
 
@@ -67,6 +86,7 @@ export function HeroExperience() {
         id="hero"
         className={styles.root}
         data-section="hero"
+        data-hydrated="false"
         onPointerMove={onPointerMove}
         onPointerDown={onPointerDown}
         onPointerUp={endDrag}
