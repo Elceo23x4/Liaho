@@ -7,13 +7,14 @@ export function CompassDock({ onOpen }: Props) {
     <div className="dock-shell">
       <Image
         className="dock-material"
-        src="/images/hero/figma-compass-dock.svg"
+        src="/images/hero/gate05-forest-dock.svg"
         alt=""
         aria-hidden="true"
-        width={107}
-        height={350}
+        width={99}
+        height={470}
         unoptimized
         draggable={false}
+        priority
       />
       <button
         type="button"

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
   useEffect,
   useRef,
@@ -95,26 +94,18 @@ export function HeroExperience() {
       >
         <div className={styles.canvas}>
           <div className={styles.paperField} aria-hidden="true" />
-          <HeroNav />
-
           <div className={styles.groundShadow} aria-hidden="true" />
 
           <div className={styles.mediaFrame}>
             <HeroVideo ref={videoRef} onProgress={handleProgress} />
-            <div className={styles.headlineScrim} aria-hidden="true" />
-            <div className={styles.groundLift} aria-hidden="true" />
+            <div className={styles.mediaGrade} aria-hidden="true" />
           </div>
 
-          <Image
-            className={styles.pearlRimSvg}
-            src="/images/hero/figma-hero-rim.svg"
-            alt=""
-            aria-hidden="true"
-            width={1792}
-            height={874}
-            unoptimized
-            draggable={false}
-          />
+          <div className={styles.rimOuter} aria-hidden="true" />
+          <div className={styles.rimChampagne} aria-hidden="true" />
+          <div className={styles.rimInner} aria-hidden="true" />
+
+          <HeroNav />
 
           <div className={styles.dock}>
             <CompassDock onOpen={() => setMapOpen(true)} />
@@ -125,7 +116,7 @@ export function HeroExperience() {
               <span>{landingContent.hero.headline[0]}</span>
               <span>{landingContent.hero.headline[1]}</span>
             </h1>
-            <p>{landingContent.hero.eyebrow.replace(" / ", "  /  ")}</p>
+            <p>{landingContent.hero.eyebrow.replace(" / ", "   /   ")}</p>
           </header>
 
           <div className={styles.blog}>
@@ -137,7 +128,7 @@ export function HeroExperience() {
           </div>
 
           <div className={styles.scrubber} aria-hidden="true">
-            <span className={styles.scrubCue}>MOVE TO EXPLORE&nbsp; ↔</span>
+            <span className={styles.scrubCue}>MOVE TO EXPLORE</span>
             <span className={styles.scrubZero}>00</span>
             <span className={styles.scrubTen}>10</span>
             <span className={styles.scrubTrack}>
@@ -147,7 +138,9 @@ export function HeroExperience() {
           </div>
 
           <div className={styles.mobileDragHint} aria-hidden="true">
-            <span>DRAG TO EXPLORE</span>
+            <span className={styles.mobileCue}>DRAG TO EXPLORE</span>
+            <span className={styles.mobileZero}>00</span>
+            <span className={styles.mobileTen}>10</span>
             <span className={styles.mobileTrack}>
               <i />
             </span>

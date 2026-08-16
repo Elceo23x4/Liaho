@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { landingContent } from "@/content/landing";
@@ -12,10 +13,23 @@ export function HeroNav() {
   return (
     <>
       <Link className="outer-link outer-link-left" href="/core-values">
-        CORE VALUES <span aria-hidden="true" />
+        <span className="outer-label">CORE VALUES</span>
+        <i className="outer-rule" aria-hidden="true" />
       </Link>
+
       <Link className="outer-link outer-link-right" href="/hire-us">
-        <span aria-hidden="true" /> HIRE US
+        <i className="outer-rule" aria-hidden="true" />
+        <span className="outer-label hire-label">HIRE US</span>
+        <Image
+          className="hire-underline"
+          src="/images/hero/gate05-hire-underline.svg"
+          alt=""
+          aria-hidden="true"
+          width={145}
+          height={18}
+          unoptimized
+          draggable={false}
+        />
       </Link>
 
       <nav className="center-nav" aria-label="Primary">
