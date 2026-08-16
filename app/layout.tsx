@@ -1,5 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Bebas_Neue, DM_Mono, Instrument_Sans, Playfair_Display } from "next/font/google";
+import {
+  Bebas_Neue,
+  Days_One,
+  DM_Mono,
+  Instrument_Sans,
+  Libre_Caslon_Display,
+  Mochiy_Pop_P_One,
+  Playfair_Display,
+} from "next/font/google";
 
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 
@@ -14,6 +22,27 @@ const instrumentSans = Instrument_Sans({
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
+  display: "swap",
+});
+
+const libreCaslon = Libre_Caslon_Display({
+  subsets: ["latin"],
+  variable: "--font-libre-caslon",
+  weight: "400",
+  display: "swap",
+});
+
+const daysOne = Days_One({
+  subsets: ["latin"],
+  variable: "--font-days-one",
+  weight: "400",
+  display: "swap",
+});
+
+const mochiy = Mochiy_Pop_P_One({
+  subsets: ["latin"],
+  variable: "--font-mochiy",
+  weight: "400",
   display: "swap",
 });
 
@@ -50,11 +79,21 @@ export const viewport: Viewport = {
   colorScheme: "dark light",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="en"
-      className={`${instrumentSans.variable} ${playfair.variable} ${dmMono.variable} ${bebas.variable}`}
+      className={[
+        instrumentSans.variable,
+        playfair.variable,
+        libreCaslon.variable,
+        daysOne.variable,
+        mochiy.variable,
+        dmMono.variable,
+        bebas.variable,
+      ].join(" ")}
       suppressHydrationWarning
     >
       <body>
