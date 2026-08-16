@@ -1,0 +1,106 @@
+.root {
+  /* This class is intentionally additive: it leaves the existing responsive
+     implementation intact and applies only the measured Gate 03 corrections. */
+}
+
+/* Desktop Gate 03 master: 1920 × 1080 */
+@media (min-width: 1200px) {
+  .root {
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+  }
+
+  /*
+   * Fit against BOTH browser axes. This preserves the complete 16:9 Figma
+   * composition on short desktop viewports instead of clipping the bottom.
+   */
+  .root :global([data-parity="hero-canvas"]) {
+    width: min(100vw, calc(100svh * 16 / 9), 1920px);
+  }
+
+  /*
+   * The legacy CSS paints hero-topography.svg twice. Keep one authoritative
+   * engraving pass only.
+   */
+  .root :global([data-parity="paper-field"]) {
+    background: linear-gradient(
+      69deg,
+      #f8ebd5 0%,
+      #e8d5b8 50%,
+      #f6ead4 100%
+    );
+  }
+
+  .root :global([data-parity="paper-field"])::after {
+    opacity: 1;
+    mix-blend-mode: normal;
+  }
+
+  /* Figma node 245:147 — x92 y980 w1740 h72 */
+  .root :global([data-parity="ground-shadow"]) {
+    left: 4.7916667%;
+    top: 90.7407407%;
+    width: 90.625%;
+    height: 6.6666667%;
+    border-radius: 0;
+    background: url("/images/hero/gate03-ground-shadow-exact.svg")
+      center / 100% 100% no-repeat;
+    filter: none;
+  }
+
+  /*
+   * Right navigation measured from Gate 03:
+   * parent starts x1338 y93;
+   * rule x1338 y117 w170;
+   * HIRE US x1573 y95;
+   * exported red stroke box x1487 y81 w193 h24.
+   */
+  .root :global(.outer-link-right) {
+    width: 22.4479cqw;
+    height: 3.75cqw;
+    gap: 0;
+  }
+
+  .root :global(.outer-link-right .outer-rule) {
+    position: absolute;
+    left: 0;
+    top: 1.25cqw;
+    width: 8.8542cqw;
+  }
+
+  .root :global(.outer-link-right .hire-label) {
+    position: absolute;
+    left: 12.2396cqw;
+    top: .1042cqw;
+  }
+
+  .root :global(.outer-link-right .hire-underline) {
+    position: absolute;
+    left: 7.7604cqw;
+    top: -.625cqw;
+    width: 10.0521cqw;
+    height: auto;
+    max-width: none;
+  }
+
+  /*
+   * Figma title node is two explicit lines:
+   * "Survey plan required"
+   * "at e-Planning screening"
+   */
+  .root :global(.editorial-title span) {
+    display: block;
+  }
+
+  /* Figma deck starts at y849, 18px below the 96px title block. */
+  .root :global(.editorial-deck) {
+    margin-top: .9375cqw;
+  }
+
+  /* Figma meta row begins around y943 rather than sitting at copy-box bottom. */
+  .root :global(.editorial-meta) {
+    top: 86.8%;
+    bottom: auto;
+  }
+}

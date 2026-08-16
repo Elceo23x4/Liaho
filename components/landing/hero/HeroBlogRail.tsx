@@ -2,7 +2,11 @@ import Image from "next/image";
 
 import { landingContent } from "@/content/landing";
 
-const editorialHeadline = "Survey plan required at e-Planning screening";
+const editorialHeadline = [
+  "Survey plan required",
+  "at e-Planning screening",
+] as const;
+
 const editorialDeck = [
   "Lagos screening guidance includes a survey plan",
   "among the core documents used to assess a",
@@ -47,7 +51,9 @@ export function HeroBlogRail() {
           target="_blank"
           rel="noreferrer"
         >
-          {editorialHeadline}
+          {editorialHeadline.map((line) => (
+            <span key={line}>{line}</span>
+          ))}
         </a>
         <p className="editorial-deck">
           {editorialDeck.map((line) => (
@@ -67,10 +73,10 @@ export function HeroBlogRail() {
         aria-label="Open planning and approvals source"
       >
         <Image
-          src="/images/hero/gate05-story-arrow.svg"
+          src="/images/hero/gate03-story-arrow-exact.svg"
           alt=""
-          width={44}
-          height={44}
+          width={58}
+          height={58}
           unoptimized
           draggable={false}
         />

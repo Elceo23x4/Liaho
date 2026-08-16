@@ -22,11 +22,11 @@ export function HeroNav() {
         <span className="outer-label hire-label">HIRE US</span>
         <Image
           className="hire-underline"
-          src="/images/hero/gate05-hire-underline.svg"
+          src="/images/hero/gate03-hire-underline-exact.svg"
           alt=""
           aria-hidden="true"
-          width={145}
-          height={18}
+          width={193}
+          height={24}
           unoptimized
           draggable={false}
         />
