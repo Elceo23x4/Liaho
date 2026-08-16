@@ -56,7 +56,7 @@ test("HERO exposes live editorial links and map control", async ({ page }) => {
   await waitForHeroHydration(page);
 
   await expect(
-    page.getByText("SURVEY PLAN REQUIRED AT e-PLANNING SCREENING"),
+    page.getByText(/survey plan required at e-planning screening/i),
   ).toBeVisible();
 
   const mapButton = page.getByRole("button", {
