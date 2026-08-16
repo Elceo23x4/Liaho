@@ -1,0 +1,9 @@
+<svg width="73" height="279" viewBox="0 0 73 279" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs><filter id="shadow" x="-12" y="-6" width="97" height="298"><feDropShadow dx="3" dy="7.5" stdDeviation="6.75" flood-color="#090605" flood-opacity=".28"/></filter>
+<linearGradient id="body" x1="0" y1="2" x2="67" y2="2" gradientUnits="userSpaceOnUse"><stop stop-color="#000906"/><stop offset=".18" stop-color="#021F14"/><stop offset=".42" stop-color="#054D2E"/><stop offset=".57" stop-color="#096339"/><stop offset=".74" stop-color="#032E1D"/><stop offset="1" stop-color="#000806"/></linearGradient>
+<linearGradient id="rim" x1="6" y1="6" x2="121" y2="32" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF6C2"/><stop offset=".5" stop-color="#915C1A"/><stop offset="1" stop-color="#F5CC75"/></linearGradient></defs>
+<g filter="url(#shadow)"><path d="M0 31.8915C0 12.774 9.75 1.62207 24 1.62207H35.25C54.75 1.62207 66.75 15.9602 66.75 37.4674V203.949C66.75 227.05 59.25 245.371 45 258.116C36.75 265.285 27 269.267 15.75 269.267H0V31.8915Z" fill="url(#body)" stroke="#F7E8B6" stroke-width="2.25"/></g>
+<path d="M6 32.4418C6 16.2209 14.25 5.67725 27 5.67725H37.5C54.75 5.67725 66.75 18.654 66.75 39.7412V206.817C66.75 228.715 60 246.558 45.75 257.913C38.25 264.401 29.25 269.267 18.75 269.267H6V32.4418Z" stroke="url(#rim)" stroke-width="1.05"/>
+<path opacity=".52" d="M12.75 19.47C9 72.18 9.75 191.41 12.75 238.45C13.5 252.24 18 261.16 25.5 266.02" stroke="#8CF2BA" stroke-opacity=".55" stroke-width=".975" stroke-linecap="round"/>
+<path d="M63 46.23C66.75 99.76 66 188.97 63 226.28" stroke="#000B08" stroke-opacity=".75" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
