@@ -23,7 +23,7 @@ export type BodyState = {
   intro: string;
   services: readonly BodyServiceItem[];
   bottomLinks: readonly [string, string];
-  outline: "SURVEYING" | "LAND" | "GEOSPATIAL" | "MAPPING" | "COMPLETE";
+  outline: "SURVEYING" | "LAND" | "GEOSPATIAL" | "MAPPING" | "CONSULTS";
   techNote: string;
 };
 
@@ -337,7 +337,7 @@ export const bodyStates: readonly BodyState[] = [
       },
     ],
     bottomLinks: ["PRECISION IN MEASUREMENT", "INTELLIGENCE IN LAND"],
-    outline: "COMPLETE",
+    outline: "CONSULTS",
     techNote: "COMPLETE SYSTEM  /  ALL CAPABILITIES ALIGNED",
   },
 ] as const;
