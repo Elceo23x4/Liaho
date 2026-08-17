@@ -15,7 +15,7 @@ import {
   canonicalAssemblyBox,
   type FigmaBox,
 } from "./bodyLayout";
-import { BODY_SCROLL_VH, bodyTimeline } from "./bodyTimeline";
+import { BODY_SCROLL_VH } from "./bodyTimeline";
 import styles from "./body.module.css";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -33,11 +33,68 @@ const preCoreAssets = [
 ] as const;
 
 const postCoreAssets = [
-  ...preCoreAssets,
+  "TS_hand.png",
+  "TS_optics.png",
+  "TS_left.png",
+  "TS_right.png",
+  "TS_lens.png",
   "TS_disp.png",
   "TS_base.png",
   "TS_foot.png",
 ] as const;
+
+const piecePresentation = {
+  "TS_hand.png": {
+    z: 14,
+    lock: { x: "0vw", y: "-0.6vh", scale: 1, rotation: -0.3 },
+    entry: { x: "0vw", y: "-24vh", scale: 0.985, rotation: -1.2 },
+  },
+  "TS_optics.png": {
+    z: 22,
+    lock: { x: "-0.2vw", y: "0.25vh", scale: 1, rotation: 0 },
+    entry: { x: "2.4vw", y: "-18vh", scale: 0.982, rotation: 0.8 },
+  },
+  "TS_left.png": {
+    z: 17,
+    lock: { x: "-0.9vw", y: "0.55vh", scale: 1, rotation: 0 },
+    entry: { x: "-34vw", y: "2vh", scale: 0.985, rotation: -1.4 },
+  },
+  "TS_right.png": {
+    z: 16,
+    lock: { x: "0.85vw", y: "0.55vh", scale: 1, rotation: 0 },
+    entry: { x: "35vw", y: "-1vh", scale: 0.985, rotation: 1.4 },
+  },
+  "TS_lens.png": {
+    z: 23,
+    lock: { x: "0.2vw", y: "-0.1vh", scale: 1, rotation: 0 },
+    entry: { x: "12vw", y: "-9vh", scale: 0.92, rotation: 1.4 },
+  },
+  "TS_core.png": {
+    z: 15,
+    lock: { x: "0vw", y: "0vh", scale: 1, rotation: 0 },
+    entry: { x: "-2vw", y: "13vh", scale: 0.93, rotation: -1.3 },
+  },
+  "TS_disp.png": {
+    z: 30,
+    lock: { x: "0.15vw", y: "1.1vh", scale: 1, rotation: 0 },
+    entry: { x: "13vw", y: "14vh", scale: 0.92, rotation: 1.2 },
+  },
+  "TS_base.png": {
+    z: 12,
+    lock: { x: "0.55vw", y: "2.65vh", scale: 1, rotation: 0 },
+    entry: { x: "2vw", y: "25vh", scale: 0.96, rotation: 1.1 },
+  },
+  "TS_foot.png": {
+    z: 11,
+    lock: { x: "1.1vw", y: "3.1vh", scale: 1, rotation: 0 },
+    entry: { x: "-1vw", y: "30vh", scale: 0.96, rotation: -0.8 },
+  },
+  "TS_comp.png": {
+    z: 28,
+    lock: { x: "0vw", y: "0vh", scale: 1, rotation: 0 },
+    entry: { x: "0vw", y: "0vh", scale: 1, rotation: 0 },
+  },
+} as const;
 
 function x(value: number) {
   return `${(value / BODY_DESIGN_WIDTH) * 100}cqw`;
@@ -68,6 +125,12 @@ function shapeVars(box: FigmaBox): CustomStyle {
   };
 }
 
+function pieceVars(asset: keyof typeof piecePresentation): CustomStyle {
+  return {
+    "--piece-z": piecePresentation[asset].z,
+  };
+}
+
 const assemblyStyle: CustomStyle = {
   "--assembly-x": x(canonicalAssemblyBox.x),
   "--assembly-y": y(canonicalAssemblyBox.y),
@@ -81,7 +144,6 @@ function TypingText({ text }: { text: string }) {
       <span aria-hidden="true">
         {Array.from(text).map((character, index) => (
           <span
-            // Index is appropriate because this is an immutable text sequence.
             key={`${index}-${character}`}
             className={styles.typeChar}
             data-type-char
@@ -179,31 +241,44 @@ export function Body() {
 
       const allPieceNodes = Array.from(pieceByAsset.values());
 
-      gsap.set(allPieceNodes, {
-        x: 0,
-        y: 0,
-        rotation: 0,
-        scale: 1,
-        opacity: 0,
-        transformOrigin: "50% 50%",
-      });
+      const setLockedState = (asset: keyof typeof piecePresentation) => {
+        const target = pieceByAsset.get(asset);
+        if (!target) return;
+        const lock = piecePresentation[asset].lock;
+        gsap.set(target, {
+          x: lock.x,
+          y: lock.y,
+          rotation: lock.rotation,
+          scale: lock.scale,
+          opacity: 0,
+          transformOrigin: "50% 50%",
+          force3D: true,
+        });
+      };
+
+      (Object.keys(piecePresentation) as Array<keyof typeof piecePresentation>)
+        .filter((asset) => asset !== "TS_comp.png")
+        .forEach((asset) => setLockedState(asset));
+
       gsap.set(finalPiece, {
-        x: 0,
-        y: 0,
+        x: piecePresentation["TS_comp.png"].lock.x,
+        y: piecePresentation["TS_comp.png"].lock.y,
         rotation: 0,
         scale: 1,
         opacity: 0,
         transformOrigin: "50% 50%",
+        force3D: true,
       });
+
       gsap.set(copyStates, { autoAlpha: 0 });
       gsap.set(outlineStates, { opacity: 0 });
-      gsap.set(outlineRail, { x: "-2.5vw" });
+      gsap.set(outlineRail, { x: "-1.6vw" });
 
       root.querySelectorAll<HTMLElement>("[data-heading-main]").forEach((node) => {
         gsap.set(node, {
           opacity: 0,
           x: 18,
-          filter: "blur(10px)",
+          filter: "blur(11px)",
           clipPath: "inset(0 100% 0 0)",
         });
       });
@@ -211,7 +286,7 @@ export function Body() {
         gsap.set(node, {
           opacity: 0,
           x: -16,
-          filter: "blur(16px)",
+          filter: "blur(18px)",
         });
       });
       root.querySelectorAll<HTMLElement>("[data-type-char]").forEach((node) => {
@@ -226,15 +301,10 @@ export function Body() {
       if (reduceMotion) {
         gsap.set(allPieceNodes, { opacity: 0 });
         gsap.set(finalPiece, { opacity: 1 });
-        gsap.set(copyStates, { autoAlpha: 0 });
         const finalCopy = copyStates[copyStates.length - 1];
         if (finalCopy) gsap.set(finalCopy, { autoAlpha: 1 });
-
-        gsap.set(outlineStates, { opacity: 0 });
         const finalOutline = outlineStates[outlineStates.length - 1];
         if (finalOutline) gsap.set(finalOutline, { opacity: 1 });
-        gsap.set(outlineRail, { x: 0 });
-
         root.querySelectorAll<HTMLElement>("[data-heading-main]").forEach((node) => {
           gsap.set(node, {
             opacity: 1,
@@ -243,23 +313,11 @@ export function Body() {
             clipPath: "inset(0 0% 0 0)",
           });
         });
-        root.querySelectorAll<HTMLElement>("[data-heading-ghost]").forEach((node) => {
-          gsap.set(node, { opacity: 0 });
-        });
         root.querySelectorAll<HTMLElement>("[data-type-char]").forEach((node) => {
           gsap.set(node, { opacity: 1 });
         });
-        root
-          .querySelectorAll<HTMLElement>("[data-service-diamond]")
-          .forEach((node) => {
-            gsap.set(node, { opacity: 1, scale: 1, rotation: 45 });
-          });
-
-        root.dataset.motion = "reduced";
         return;
       }
-
-      root.dataset.motion = "full";
 
       const timeline = gsap.timeline({
         defaults: { overwrite: false },
@@ -267,31 +325,31 @@ export function Body() {
           trigger: root,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1,
+          scrub: 1.7,
           invalidateOnRefresh: true,
           fastScrollEnd: false,
+          anticipatePin: 1,
         },
       });
 
-      const piece = (asset: string) => pieceByAsset.get(asset);
-
       const revealPiece = (
-        asset: string,
+        asset: keyof typeof piecePresentation,
         start: number,
         duration: number,
-        from: gsap.TweenVars,
       ) => {
-        const target = piece(asset);
+        const target = pieceByAsset.get(asset);
         if (!target) return;
+        const entry = piecePresentation[asset].entry;
+        const lock = piecePresentation[asset].lock;
 
         timeline.fromTo(
           target,
-          { ...from, opacity: 0 },
+          { ...entry, opacity: 0 },
           {
-            x: 0,
-            y: 0,
-            rotation: 0,
-            scale: 1,
+            x: lock.x,
+            y: lock.y,
+            rotation: lock.rotation,
+            scale: lock.scale,
             opacity: 1,
             duration,
             ease: "power3.out",
@@ -300,74 +358,38 @@ export function Body() {
         );
       };
 
-      /*
-       * MATHEMATICAL ASSEMBLY CONTRACT
-       * Every TS_* image is rendered in the same canonical 2:3 rectangle.
-       * The visible component therefore lands by source-pixel registration,
-       * not by eye-tuned offsets.
-       */
-      revealPiece("TS_hand.png", 0, 6, {
-        y: "-22vh",
-        scale: 0.98,
-        rotation: -1.2,
-      });
-      revealPiece("TS_optics.png", 10, 6, {
-        y: "-18vh",
-        x: "2vw",
-        scale: 0.985,
-      });
-      revealPiece("TS_left.png", 20, 6, {
-        x: "-34vw",
-        rotation: -1.2,
-      });
-      revealPiece("TS_right.png", 30, 6, {
-        x: "34vw",
-        rotation: 1.2,
-      });
-      revealPiece("TS_lens.png", 40, 6, {
-        x: "12vw",
-        y: "-8vh",
-        scale: 0.9,
-      });
+      revealPiece("TS_hand.png", 0, 6);
+      revealPiece("TS_optics.png", 10, 6);
+      revealPiece("TS_left.png", 20, 6);
+      revealPiece("TS_right.png", 30, 6);
+      revealPiece("TS_lens.png", 40, 6);
 
-      /*
-       * CORE INTERRUPTION
-       * 48–50: everything already locked explodes out.
-       * 50–58: TS_core is the only instrument visible.
-       * 58–60: core slides away while the pre-core locked stack returns.
-       * TS_core never comes back after this handoff.
-       */
-      const explosion = {
-        "TS_hand.png": { x: "-4vw", y: "-28vh", rotation: -5, scale: 0.96 },
-        "TS_optics.png": { x: "5vw", y: "-22vh", rotation: 4, scale: 0.95 },
-        "TS_left.png": { x: "-38vw", y: "4vh", rotation: -6, scale: 0.95 },
-        "TS_right.png": { x: "38vw", y: "-3vh", rotation: 6, scale: 0.95 },
-        "TS_lens.png": { x: "18vw", y: "-18vh", rotation: 5, scale: 0.88 },
+      const explosionTargets = {
+        "TS_hand.png": { x: "-4vw", y: "-28vh", rotation: -6, scale: 0.95 },
+        "TS_optics.png": { x: "5vw", y: "-22vh", rotation: 5, scale: 0.95 },
+        "TS_left.png": { x: "-38vw", y: "4vh", rotation: -7, scale: 0.95 },
+        "TS_right.png": { x: "38vw", y: "-4vh", rotation: 7, scale: 0.95 },
+        "TS_lens.png": { x: "18vw", y: "-18vh", rotation: 6, scale: 0.88 },
       } as const;
 
       preCoreAssets.forEach((asset) => {
-        const target = piece(asset);
+        const target = pieceByAsset.get(asset);
         if (!target) return;
         timeline.to(
           target,
           {
-            ...explosion[asset],
+            ...explosionTargets[asset],
             opacity: 0,
-            duration: 2,
+            duration: 2.1,
             ease: "power3.in",
           },
           48,
         );
       });
 
-      revealPiece("TS_core.png", 50, 5.5, {
-        y: "13vh",
-        x: "-2vw",
-        scale: 0.92,
-        rotation: -1.5,
-      });
+      revealPiece("TS_core.png", 50, 5.5);
 
-      const core = piece("TS_core.png");
+      const core = pieceByAsset.get("TS_core.png");
       if (core) {
         timeline.to(
           core,
@@ -377,7 +399,7 @@ export function Body() {
             rotation: 4,
             scale: 0.96,
             opacity: 0,
-            duration: 2,
+            duration: 2.1,
             ease: "power3.inOut",
           },
           58,
@@ -385,46 +407,30 @@ export function Body() {
       }
 
       preCoreAssets.forEach((asset) => {
-        const target = piece(asset);
+        const target = pieceByAsset.get(asset);
         if (!target) return;
-
+        const lock = piecePresentation[asset].lock;
         timeline.to(
           target,
           {
-            x: 0,
-            y: 0,
-            rotation: 0,
-            scale: 1,
+            x: lock.x,
+            y: lock.y,
+            rotation: lock.rotation,
+            scale: lock.scale,
             opacity: 1,
-            duration: 2,
+            duration: 2.1,
             ease: "power3.out",
           },
           58,
         );
       });
 
-      revealPiece("TS_disp.png", 60, 6, {
-        x: "12vw",
-        y: "15vh",
-        scale: 0.92,
-        rotation: 1.2,
-      });
-      revealPiece("TS_base.png", 70, 6, {
-        y: "24vh",
-        scale: 0.96,
-        rotation: 1.5,
-      });
-      revealPiece("TS_foot.png", 80, 6, {
-        y: "30vh",
-        scale: 0.96,
-      });
+      revealPiece("TS_disp.png", 60, 6);
+      revealPiece("TS_base.png", 70, 6);
+      revealPiece("TS_foot.png", 80, 6);
 
-      /*
-       * Final whole-instrument reveal. Because TS_comp uses the same canonical
-       * box as every piece, the cross-resolve cannot drift or resize.
-       */
       postCoreAssets.forEach((asset) => {
-        const target = piece(asset);
+        const target = pieceByAsset.get(asset);
         if (!target) return;
         timeline.to(
           target,
@@ -440,7 +446,7 @@ export function Body() {
 
       timeline.fromTo(
         finalPiece,
-        { opacity: 0, scale: 1.008, filter: "blur(5px)" },
+        { opacity: 0, scale: 1.008, filter: "blur(4px)" },
         {
           opacity: 1,
           scale: 1,
@@ -451,11 +457,6 @@ export function Body() {
         90,
       );
 
-      /*
-       * Foreground transition system.
-       * Heading = blurred ghost + clipped sharp face blending into one layer.
-       * Services = character-by-character reveal tied to scroll.
-       */
       copyStates.forEach((copy, index) => {
         const start = index * 10;
         const nextStart = (index + 1) * 10;
@@ -478,22 +479,22 @@ export function Body() {
         if (headingGhost) {
           timeline.fromTo(
             headingGhost,
-            { opacity: 0, x: -16, filter: "blur(16px)" },
+            { opacity: 0, x: -16, filter: "blur(18px)" },
             {
-              opacity: 0.68,
+              opacity: 0.85,
               x: 0,
-              filter: "blur(5px)",
-              duration: 0.8,
+              filter: "blur(6px)",
+              duration: 1,
               ease: "power3.out",
             },
-            start + 0.2,
+            start + 0.18,
           );
           timeline.to(
             headingGhost,
             {
-              opacity: 0,
+              opacity: 0.14,
               filter: "blur(0px)",
-              duration: 0.8,
+              duration: 0.85,
               ease: "power2.out",
             },
             start + 1.0,
@@ -506,7 +507,7 @@ export function Body() {
             {
               opacity: 0,
               x: 18,
-              filter: "blur(10px)",
+              filter: "blur(11px)",
               clipPath: "inset(0 100% 0 0)",
             },
             {
@@ -514,10 +515,10 @@ export function Body() {
               x: 0,
               filter: "blur(0px)",
               clipPath: "inset(0 0% 0 0)",
-              duration: 1.55,
+              duration: 1.75,
               ease: "power3.out",
             },
-            start + 0.35,
+            start + 0.32,
           );
         }
 
@@ -532,7 +533,7 @@ export function Body() {
               duration: 1.0,
               ease: "power3.out",
             },
-            start + 0.8,
+            start + 0.85,
           );
         }
 
@@ -544,10 +545,10 @@ export function Body() {
               opacity: 1,
               y: 0,
               filter: "blur(0px)",
-              duration: 1.1,
+              duration: 1.15,
               ease: "power3.out",
             },
-            start + 1.0,
+            start + 1.05,
           );
         }
 
@@ -561,7 +562,7 @@ export function Body() {
               duration: 0.9,
               ease: "power2.out",
             },
-            start + 1.15,
+            start + 1.18,
           );
         });
 
@@ -571,7 +572,7 @@ export function Body() {
           const chars = Array.from(
             block.querySelectorAll<HTMLElement>("[data-type-char]"),
           );
-          const serviceStart = start + 1.65 + serviceIndex * 0.72;
+          const serviceStart = start + 1.7 + serviceIndex * 0.72;
 
           if (diamond) {
             timeline.fromTo(
@@ -611,10 +612,10 @@ export function Body() {
             outline,
             {
               opacity: 1,
-              duration: 0.8,
+              duration: 0.9,
               ease: "power2.out",
             },
-            start + 0.4,
+            start + 0.35,
           );
         }
 
@@ -645,13 +646,13 @@ export function Body() {
 
       timeline.fromTo(
         outlineRail,
-        { x: "-2.5vw" },
-        { x: "2.5vw", duration: 100, ease: "none" },
+        { x: "-1.6vw" },
+        { x: "1.6vw", duration: 100, ease: "none" },
         0,
       );
 
       return () => {
-        delete root.dataset.motion;
+        root.removeAttribute("data-motion");
       };
     },
     { scope: rootRef },
@@ -694,32 +695,53 @@ export function Body() {
             data-body-assembly
             aria-hidden="true"
           >
-            {bodyTimeline.slice(0, 9).map((stage) => (
+            {preCoreAssets.map((asset) => (
               <div
-                key={stage.asset}
+                key={asset}
                 className={styles.instrumentPiece}
-                data-body-piece={stage.asset}
+                data-body-piece={asset}
+                style={pieceVars(asset)}
               >
                 <Image
-                  src={`${ASSET_ROOT}/${stage.asset}`}
+                  src={`${ASSET_ROOT}/${asset}`}
                   alt=""
                   fill
-                  sizes="(max-width: 767px) 77vw, 30vw"
+                  sizes="(max-width: 767px) 62vw, 30vw"
                   unoptimized
                   draggable={false}
                 />
               </div>
             ))}
+            {(["TS_core.png", "TS_disp.png", "TS_base.png", "TS_foot.png"] as const).map(
+              (asset) => (
+                <div
+                  key={asset}
+                  className={styles.instrumentPiece}
+                  data-body-piece={asset}
+                  style={pieceVars(asset)}
+                >
+                  <Image
+                    src={`${ASSET_ROOT}/${asset}`}
+                    alt=""
+                    fill
+                    sizes="(max-width: 767px) 62vw, 30vw"
+                    unoptimized
+                    draggable={false}
+                  />
+                </div>
+              ),
+            )}
 
             <div
               className={`${styles.instrumentPiece} ${styles.finalPiece}`}
               data-body-final-piece
+              style={pieceVars("TS_comp.png")}
             >
               <Image
                 src={`${ASSET_ROOT}/TS_comp.png`}
                 alt=""
                 fill
-                sizes="(max-width: 767px) 77vw, 30vw"
+                sizes="(max-width: 767px) 62vw, 30vw"
                 unoptimized
                 draggable={false}
               />

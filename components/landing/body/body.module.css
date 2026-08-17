@@ -68,7 +68,7 @@
 }
 
 .copyRail {
-  z-index: var(--z-copy);
+  z-index: 40;
 }
 
 .stateCopy {
@@ -81,11 +81,12 @@
   position: absolute;
   left: var(--assembly-x);
   top: var(--assembly-y);
-  z-index: var(--z-instrument);
+  z-index: 20;
   width: var(--assembly-w);
   height: var(--assembly-h);
   aspect-ratio: 2 / 3;
   isolation: isolate;
+  pointer-events: none;
 }
 
 .instrumentPiece {
@@ -93,6 +94,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
+  z-index: var(--piece-z);
   will-change: transform, opacity, filter;
   transform: translate3d(0, 0, 0);
 }
@@ -105,16 +107,13 @@
   opacity: 0;
 }
 
-/*
- * The typography is intentionally ABOVE the instrument.
- * This is the actual overlay plane; copy remains one layer higher.
- */
 .outlineRail {
   position: absolute;
   inset: 0;
-  z-index: var(--z-outline-type);
+  z-index: 35;
   will-change: transform;
   pointer-events: none;
+  mix-blend-mode: screen;
 }
 
 .outlineState {
@@ -126,7 +125,7 @@
   width: var(--w);
   height: var(--h);
   margin: 0;
-  color: transparent;
+  color: rgb(145 108 82 / 0.04);
   font-family: var(--font-condensed-display);
   font-size: var(--fs);
   font-weight: 400;
@@ -134,7 +133,8 @@
   letter-spacing: var(--ls);
   text-transform: uppercase;
   white-space: nowrap;
-  -webkit-text-stroke: max(1px, 0.0521cqw) rgb(113 87 66 / 0.28);
+  -webkit-text-stroke: max(1px, 0.0521cqw) rgb(113 87 66 / 0.36);
+  text-shadow: 0 0 18px rgb(194 79 41 / 0.08);
   opacity: 0;
   will-change: opacity;
 }
@@ -173,6 +173,7 @@
   inset: 0;
   z-index: 1;
   color: #c14627;
+  opacity: 0.2;
   mix-blend-mode: screen;
   will-change: opacity, transform, filter;
 }
@@ -307,7 +308,7 @@
   position: absolute;
   left: 3.75cqw;
   top: 95.3704cqh;
-  z-index: var(--z-copy);
+  z-index: 40;
   margin: 0;
   color: #c24f29;
   font-family: var(--font-technical);
@@ -321,7 +322,7 @@
   position: absolute;
   left: 75.5208cqw;
   top: 95.7407cqh;
-  z-index: var(--z-copy);
+  z-index: 40;
   display: flex;
   align-items: flex-start;
   gap: 0.7292cqw;
@@ -348,11 +349,19 @@
 
 @media (min-width: 768px) and (max-width: 1199px) {
   .scene {
-    left: -6.25vw;
+    left: -5.75vw;
   }
 
   .backgroundLayer {
     background-position: 42% center;
+  }
+
+  .heading {
+    width: min(var(--w), 39cqw);
+  }
+
+  .intro {
+    width: min(var(--w), 31cqw);
   }
 }
 
@@ -380,137 +389,168 @@
     display: none;
   }
 
-  /*
-   * Mobile checkpoint uses the same 2:3 registration principle:
-   * x86 / y72 / 298×447 in the 390×844 master.
-   */
   .instrumentCanvas {
-    left: 22.0513vw;
-    top: 8.5308svh;
-    width: 76.4103vw;
-    height: 52.9621svh;
+    left: 34vw;
+    top: 10svh;
+    width: 58vw;
+    height: 87vw;
+  }
+
+  .outlineRail {
+    z-index: 32;
   }
 
   .outlineState {
-    left: 23.5897vw;
-    top: 12.4408svh;
-    width: 110vw;
+    left: 16vw;
+    top: 14svh;
+    width: 90vw;
     height: auto;
-    font-size: 31.7949vw;
-    line-height: 29.3839svh;
-    letter-spacing: -0.7692vw;
+    font-size: 25vw;
+    line-height: 0.82;
+    letter-spacing: -0.75vw;
     -webkit-text-stroke: 1px rgb(113 87 66 / 0.28);
   }
 
   .heading {
-    left: 6.1538vw;
-    top: 9.2417svh;
-    width: 87.6923vw;
-    height: auto;
-    line-height: 0.91;
-    letter-spacing: -0.2564vw;
+    left: 5.4vw;
+    top: 6.6svh;
+    width: 52vw;
+    line-height: 0.9;
+    letter-spacing: -0.3vw;
   }
 
   .mobileHeadingXl {
-    font-size: 16.4103vw;
+    font-size: 14vw;
   }
 
   .mobileHeadingLg {
-    font-size: 13.8462vw;
+    font-size: 12vw;
   }
 
   .mobileHeadingMd {
-    font-size: 11.7949vw;
+    font-size: 10vw;
   }
 
   .subheading {
-    left: 6.6667vw;
-    top: 24.6445svh;
-    width: 87.1795vw;
-    height: auto;
-    font-size: 3.0769vw;
-    line-height: 1.35;
-    letter-spacing: 0.5385vw;
+    left: 5.4vw;
+    top: 31.8svh;
+    width: 89vw;
+    font-size: 3vw;
+    line-height: 1.3;
+    letter-spacing: 0.5vw;
   }
 
   .intro {
-    left: 6.1538vw;
-    top: 61.1374svh;
-    width: 87.1795vw;
-    height: auto;
+    left: 5.4vw;
+    top: 42svh;
+    width: 89vw;
     color: #ded1bd;
-    font-size: 4.359vw;
-    line-height: 2.8436svh;
-    letter-spacing: 0.0256vw;
+    font-size: 3.7vw;
+    line-height: 1.24;
+    letter-spacing: 0.02vw;
+  }
+
+  .servicesGrid {
+    position: absolute;
+    left: 5.4vw;
+    right: 5.4vw;
+    top: 64svh;
+    bottom: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.35svh;
+  }
+
+  .serviceBlock {
+    position: relative;
+    inset: auto;
+    min-height: auto;
   }
 
   .serviceDiamond {
-    display: none;
+    position: absolute;
+    left: 0;
+    top: 0.55svh;
+    width: 2.6vw;
+    height: 2.6vw;
+    display: block;
   }
 
-  .serviceBlock[data-service-slot="1"] .serviceLabel {
-    left: 6.1538vw;
-    top: 77.2512svh;
-  }
-
-  .serviceBlock[data-service-slot="1"] .serviceCopy {
-    left: 6.1538vw;
-    top: 79.3839svh;
-  }
-
-  .serviceBlock[data-service-slot="2"] .serviceLabel {
-    left: 6.1538vw;
-    top: 84.5972svh;
-  }
-
-  .serviceBlock[data-service-slot="2"] .serviceCopy {
-    left: 6.1538vw;
-    top: 86.7299svh;
-  }
-
-  .serviceBlock[data-service-slot="3"] .serviceLabel {
-    left: 6.1538vw;
-    top: 91.9431svh;
-  }
-
-  .serviceBlock[data-service-slot="3"] .serviceCopy {
-    left: 6.1538vw;
-    top: 94.0758svh;
+  .serviceLabel,
+  .serviceCopy {
+    position: static;
+    width: auto;
+    min-height: auto;
   }
 
   .serviceLabel {
-    width: 87.1795vw;
-    height: auto;
+    padding-left: 5.2vw;
     color: #ded1bd;
     font-family: var(--font-technical);
-    font-size: 2.5641vw;
+    font-size: 2.8vw;
     font-weight: 500;
-    line-height: 1.25;
-    letter-spacing: 0.2051vw;
+    line-height: 1.18;
+    letter-spacing: 0.18vw;
   }
 
   .serviceCopy {
-    width: 82.0513vw;
-    height: auto;
-    color: #7a6e5e;
-    font-size: 2.8205vw;
-    line-height: 1.35;
+    padding-left: 5.2vw;
+    padding-top: 0.25svh;
+    color: #91867a;
+    font-size: 3vw;
+    line-height: 1.18;
     letter-spacing: 0;
   }
 
   .mobileMotionHint {
     position: absolute;
-    left: 6.1538vw;
-    bottom: 2.1327svh;
-    z-index: var(--z-controls);
+    left: 5.4vw;
+    bottom: 2svh;
+    z-index: 45;
     display: block;
     margin: 0;
     color: #a83014;
     font-family: var(--font-technical);
-    font-size: 1.7949vw;
+    font-size: 1.75vw;
     font-weight: 500;
-    letter-spacing: 0.1538vw;
+    letter-spacing: 0.15vw;
     white-space: nowrap;
+  }
+}
+
+@media (max-width: 479px) {
+  .instrumentCanvas {
+    left: 33vw;
+    top: 11svh;
+    width: 60vw;
+    height: 90vw;
+  }
+
+  .heading {
+    top: 6svh;
+    width: 56vw;
+  }
+
+  .subheading {
+    top: 31svh;
+  }
+
+  .intro {
+    top: 41svh;
+    font-size: 3.55vw;
+  }
+
+  .servicesGrid {
+    top: 63svh;
+    gap: 1.1svh;
+  }
+
+  .serviceLabel {
+    font-size: 2.7vw;
+  }
+
+  .serviceCopy {
+    font-size: 2.85vw;
   }
 }
 
