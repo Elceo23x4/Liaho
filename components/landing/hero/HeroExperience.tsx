@@ -14,6 +14,7 @@ import { CompassDock } from "./CompassDock";
 import { CompassMedallion } from "./CompassMedallion";
 import { HeroBlogRail } from "./HeroBlogRail";
 import { HeroNav } from "./HeroNav";
+import { HeroSurveyPlans } from "./HeroSurveyPlans";
 import { HeroVideo, type HeroVideoHandle, getPointerRatio } from "./HeroVideo";
 
 import styles from "./hero.module.css";
@@ -98,6 +99,8 @@ export function HeroExperience() {
           data-parity="paper-field"
           aria-hidden="true"
         />
+
+        <HeroSurveyPlans />
 
         <div className={styles.canvas} data-parity="hero-canvas">
           <div
