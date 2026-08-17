@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test";
 
-async function setBodyProgress(page: import("@playwright/test").Page, progress: number) {
+async function setBodyProgress(
+  page: import("@playwright/test").Page,
+  progress: number,
+) {
   await page.evaluate((nextProgress) => {
     const body = document.querySelector<HTMLElement>("#services");
     if (!body) throw new Error("BODY section not found");
@@ -10,59 +13,73 @@ async function setBodyProgress(page: import("@playwright/test").Page, progress: 
     window.scrollTo(0, top + travel * nextProgress);
   }, progress);
 
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(300);
 }
 
-async function opacity(page: import("@playwright/test").Page, selector: string) {
-  return page.locator(selector).evaluate((element) =>
-    Number.parseFloat(getComputedStyle(element).opacity),
-  );
-}
-
-test.describe("BODY assembly pass 3", () => {
-  test("core appears alone and then leaves permanently", async ({ page }) => {
-    await page.goto("/");
-    await setBodyProgress(page, 0.555);
-
-    for (const asset of [
-      "TS_hand.png",
-      "TS_optics.png",
-      "TS_left.png",
-      "TS_right.png",
-      "TS_lens.png",
-      "TS_disp.png",
-      "TS_base.png",
-      "TS_foot.png",
-    ]) {
-      expect(await opacity(page, `[data-body-piece="${asset}"]`)).toBeLessThan(0.12);
-    }
-
-    expect(await opacity(page, '[data-body-piece="TS_core.png"]')).toBeGreaterThan(0.9);
-
-    await setBodyProgress(page, 0.66);
-
-    expect(await opacity(page, '[data-body-piece="TS_core.png"]')).toBeLessThan(0.12);
-    expect(await opacity(page, '[data-body-piece="TS_disp.png"]')).toBeGreaterThan(0.82);
-  });
-
-  test("outline plane is above instrument plane", async ({ page }) => {
+test.describe("BODY pass 4 regressions", () => {
+  test("TS_lens renders above TS_disp", async ({ page }) => {
     await page.goto("/");
 
-    const assemblyZ = await page.locator("[data-body-assembly]").evaluate((element) =>
-      Number.parseInt(getComputedStyle(element).zIndex, 10),
-    );
-    const outlineZ = await page.locator("[data-body-outline-rail]").evaluate((element) =>
-      Number.parseInt(getComputedStyle(element).zIndex, 10),
-    );
+    const lens = await page
+      .locator('[data-body-piece="TS_lens.png"]')
+      .evaluate((element) => Number.parseInt(getComputedStyle(element).zIndex, 10));
+    const display = await page
+      .locator('[data-body-piece="TS_disp.png"]')
+      .evaluate((element) => Number.parseInt(getComputedStyle(element).zIndex, 10));
 
-    expect(outlineZ).toBeGreaterThan(assemblyZ);
+    expect(lens).toBeGreaterThan(display);
   });
 
-  test("mobile service stack does not absolutely overlap", async ({ page }) => {
+  test("typography overlay is above the station and has split line treatment", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const assemblyZ = await page
+      .locator("[data-body-assembly]")
+      .evaluate((element) => Number.parseInt(getComputedStyle(element).zIndex, 10));
+    const overlayZ = await page
+      .locator("[data-body-outline-rail]")
+      .evaluate((element) => Number.parseInt(getComputedStyle(element).zIndex, 10));
+
+    expect(overlayZ).toBeGreaterThan(assemblyZ);
+
+    const upper = page.locator("[data-body-outline='1'] .outlineUpper");
+    const lower = page.locator("[data-body-outline='1'] .outlineLower");
+
+    expect(await upper.evaluate((el) => getComputedStyle(el).color)).not.toBe(
+      "rgba(0, 0, 0, 0)",
+    );
+    expect(await lower.evaluate((el) => getComputedStyle(el).color)).toBe(
+      "rgba(0, 0, 0, 0)",
+    );
+  });
+
+  test("last typography overlay reads CONSULTS", async ({ page }) => {
+    await page.goto("/");
+    await expect(
+      page.locator("[data-body-outline='10'] .outlineUpper"),
+    ).toHaveText("CONSULTS");
+    await expect(
+      page.locator("[data-body-outline='10'] .outlineLower"),
+    ).toHaveText("CONSULTS");
+  });
+
+  test("mobile uses a smaller station and translucent content field", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
+    await setBodyProgress(page, 0.72);
 
-    const labels = page.locator("[data-body-copy='1'] .serviceLabel");
-    await expect(labels.first()).toBeVisible();
+    const stationWidth = await page
+      .locator("[data-body-assembly]")
+      .evaluate((el) => el.getBoundingClientRect().width);
+    expect(stationWidth).toBeLessThan(160);
+
+    const copyBackground = await page
+      .locator("[data-body-copy='8']")
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(copyBackground).not.toBe("rgba(0, 0, 0, 0)");
   });
-}
+});
