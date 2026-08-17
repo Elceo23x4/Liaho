@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -8,6 +8,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { bodyStates } from "@/content/body";
 
+import {
+  BODY_DESIGN_HEIGHT,
+  BODY_DESIGN_WIDTH,
+  bodyFigmaLayouts,
+  canonicalAssemblyBox,
+  type FigmaBox,
+} from "./bodyLayout";
 import { BODY_SCROLL_VH, bodyTimeline } from "./bodyTimeline";
 import styles from "./body.module.css";
 
@@ -15,24 +22,113 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const ASSET_ROOT = "/images/body";
 
-function buildEntry(stage: (typeof bodyTimeline)[number]) {
+type CustomStyle = CSSProperties & Record<`--${string}`, string | number>;
+
+const preCoreAssets = [
+  "TS_hand.png",
+  "TS_optics.png",
+  "TS_left.png",
+  "TS_right.png",
+  "TS_lens.png",
+] as const;
+
+const postCoreAssets = [
+  ...preCoreAssets,
+  "TS_disp.png",
+  "TS_base.png",
+  "TS_foot.png",
+] as const;
+
+function x(value: number) {
+  return `${(value / BODY_DESIGN_WIDTH) * 100}cqw`;
+}
+
+function y(value: number) {
+  return `${(value / BODY_DESIGN_HEIGHT) * 100}cqh`;
+}
+
+function textVars(box: FigmaBox): CustomStyle {
   return {
-    x: stage.entry.xVw ? `${stage.entry.xVw}vw` : 0,
-    y: stage.entry.yVh ? `${stage.entry.yVh}vh` : 0,
-    rotation: stage.entry.rotateDeg?.[0] ?? 0,
-    scale: stage.entry.scale?.[0] ?? 1,
-    opacity: stage.entry.opacity?.[0] ?? 1,
+    "--x": x(box.x),
+    "--y": y(box.y),
+    "--w": x(box.width ?? 0),
+    "--h": y(box.height ?? 0),
+    "--fs": x(box.fontSize ?? 0),
+    "--lh": x(box.lineHeight ?? box.fontSize ?? 0),
+    "--ls": x(box.letterSpacing ?? 0),
   };
 }
 
-function buildLocked(stage: (typeof bodyTimeline)[number]) {
+function shapeVars(box: FigmaBox): CustomStyle {
   return {
-    x: 0,
-    y: 0,
-    rotation: stage.entry.rotateDeg?.[1] ?? 0,
-    scale: stage.entry.scale?.[1] ?? 1,
-    opacity: stage.entry.opacity?.[1] ?? 1,
+    "--x": x(box.x),
+    "--y": y(box.y),
+    "--w": x(box.width ?? 0),
+    "--h": y(box.height ?? 0),
   };
+}
+
+const assemblyStyle: CustomStyle = {
+  "--assembly-x": x(canonicalAssemblyBox.x),
+  "--assembly-y": y(canonicalAssemblyBox.y),
+  "--assembly-w": x(canonicalAssemblyBox.width),
+  "--assembly-h": y(canonicalAssemblyBox.height),
+};
+
+function TypingText({ text }: { text: string }) {
+  return (
+    <span className={styles.typingText} aria-label={text}>
+      <span aria-hidden="true">
+        {Array.from(text).map((character, index) => (
+          <span
+            // Index is appropriate because this is an immutable text sequence.
+            key={`${index}-${character}`}
+            className={styles.typeChar}
+            data-type-char
+          >
+            {character}
+          </span>
+        ))}
+      </span>
+    </span>
+  );
+}
+
+function ServiceBlock({
+  stateIndex,
+  serviceIndex,
+}: {
+  stateIndex: number;
+  serviceIndex: number;
+}) {
+  const state = bodyStates[stateIndex];
+  const service = state.services[serviceIndex];
+  const layout = bodyFigmaLayouts[stateIndex].services.find(
+    (item) => item.slot === service.slot,
+  );
+
+  if (!layout) return null;
+
+  return (
+    <div
+      className={styles.serviceBlock}
+      data-body-service
+      data-service-slot={service.slot}
+    >
+      <i
+        className={styles.serviceDiamond}
+        style={shapeVars(layout.diamond)}
+        data-service-diamond
+        aria-hidden="true"
+      />
+      <p className={styles.serviceLabel} style={textVars(layout.label)}>
+        <TypingText text={service.label} />
+      </p>
+      <p className={styles.serviceCopy} style={textVars(layout.copy)}>
+        <TypingText text={service.copy} />
+      </p>
+    </div>
+  );
 }
 
 function ScaleTicks() {
@@ -48,10 +144,6 @@ function ScaleTicks() {
   );
 }
 
-function ServiceDiamond() {
-  return <i className={styles.serviceDiamond} aria-hidden="true" />;
-}
-
 export function Body() {
   const rootRef = useRef<HTMLElement>(null);
 
@@ -60,9 +152,12 @@ export function Body() {
       const root = rootRef.current;
       if (!root) return;
 
-      const pieceStack = Array.from(
-        root.querySelectorAll<HTMLElement>("[data-body-piece]"),
-      );
+      const pieceByAsset = new Map<string, HTMLElement>();
+      root.querySelectorAll<HTMLElement>("[data-body-piece]").forEach((node) => {
+        const asset = node.dataset.bodyPiece;
+        if (asset) pieceByAsset.set(asset, node);
+      });
+
       const finalPiece = root.querySelector<HTMLElement>(
         "[data-body-final-piece]",
       );
@@ -82,28 +177,84 @@ export function Body() {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      gsap.set(pieceStack, { transformOrigin: "50% 50%" });
-      gsap.set(finalPiece, {
+      const allPieceNodes = Array.from(pieceByAsset.values());
+
+      gsap.set(allPieceNodes, {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        scale: 1,
         opacity: 0,
-        y: "3vh",
-        scale: 0.985,
         transformOrigin: "50% 50%",
       });
-      gsap.set(copyStates, { opacity: 0, y: 28 });
+      gsap.set(finalPiece, {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        scale: 1,
+        opacity: 0,
+        transformOrigin: "50% 50%",
+      });
+      gsap.set(copyStates, { autoAlpha: 0 });
       gsap.set(outlineStates, { opacity: 0 });
       gsap.set(outlineRail, { x: "-2.5vw" });
 
+      root.querySelectorAll<HTMLElement>("[data-heading-main]").forEach((node) => {
+        gsap.set(node, {
+          opacity: 0,
+          x: 18,
+          filter: "blur(10px)",
+          clipPath: "inset(0 100% 0 0)",
+        });
+      });
+      root.querySelectorAll<HTMLElement>("[data-heading-ghost]").forEach((node) => {
+        gsap.set(node, {
+          opacity: 0,
+          x: -16,
+          filter: "blur(16px)",
+        });
+      });
+      root.querySelectorAll<HTMLElement>("[data-type-char]").forEach((node) => {
+        gsap.set(node, { opacity: 0 });
+      });
+      root
+        .querySelectorAll<HTMLElement>("[data-service-diamond]")
+        .forEach((node) => {
+          gsap.set(node, { opacity: 0, scale: 0.2, rotation: 45 });
+        });
+
       if (reduceMotion) {
-        gsap.set(pieceStack, { opacity: 0, x: 0, y: 0, rotation: 0, scale: 1 });
-        gsap.set(finalPiece, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1 });
-        gsap.set(copyStates, { opacity: 0, y: 0 });
+        gsap.set(allPieceNodes, { opacity: 0 });
+        gsap.set(finalPiece, { opacity: 1 });
+        gsap.set(copyStates, { autoAlpha: 0 });
         const finalCopy = copyStates[copyStates.length - 1];
-        if (finalCopy) gsap.set(finalCopy, { opacity: 1, y: 0 });
+        if (finalCopy) gsap.set(finalCopy, { autoAlpha: 1 });
 
         gsap.set(outlineStates, { opacity: 0 });
         const finalOutline = outlineStates[outlineStates.length - 1];
         if (finalOutline) gsap.set(finalOutline, { opacity: 1 });
         gsap.set(outlineRail, { x: 0 });
+
+        root.querySelectorAll<HTMLElement>("[data-heading-main]").forEach((node) => {
+          gsap.set(node, {
+            opacity: 1,
+            x: 0,
+            filter: "blur(0px)",
+            clipPath: "inset(0 0% 0 0)",
+          });
+        });
+        root.querySelectorAll<HTMLElement>("[data-heading-ghost]").forEach((node) => {
+          gsap.set(node, { opacity: 0 });
+        });
+        root.querySelectorAll<HTMLElement>("[data-type-char]").forEach((node) => {
+          gsap.set(node, { opacity: 1 });
+        });
+        root
+          .querySelectorAll<HTMLElement>("[data-service-diamond]")
+          .forEach((node) => {
+            gsap.set(node, { opacity: 1, scale: 1, rotation: 45 });
+          });
+
         root.dataset.motion = "reduced";
         return;
       }
@@ -111,7 +262,7 @@ export function Body() {
       root.dataset.motion = "full";
 
       const timeline = gsap.timeline({
-        defaults: { overwrite: "auto" },
+        defaults: { overwrite: false },
         scrollTrigger: {
           trigger: root,
           start: "top top",
@@ -122,91 +273,373 @@ export function Body() {
         },
       });
 
-      bodyTimeline.slice(0, 9).forEach((stage) => {
-        const target = root.querySelector<HTMLElement>(
-          `[data-body-piece="${stage.asset}"]`,
-        );
+      const piece = (asset: string) => pieceByAsset.get(asset);
+
+      const revealPiece = (
+        asset: string,
+        start: number,
+        duration: number,
+        from: gsap.TweenVars,
+      ) => {
+        const target = piece(asset);
         if (!target) return;
 
         timeline.fromTo(
           target,
-          buildEntry(stage),
+          { ...from, opacity: 0 },
           {
-            ...buildLocked(stage),
-            duration: stage.reveal[1] - stage.reveal[0],
+            x: 0,
+            y: 0,
+            rotation: 0,
+            scale: 1,
+            opacity: 1,
+            duration,
             ease: "power3.out",
           },
-          stage.reveal[0],
+          start,
         );
+      };
+
+      /*
+       * MATHEMATICAL ASSEMBLY CONTRACT
+       * Every TS_* image is rendered in the same canonical 2:3 rectangle.
+       * The visible component therefore lands by source-pixel registration,
+       * not by eye-tuned offsets.
+       */
+      revealPiece("TS_hand.png", 0, 6, {
+        y: "-22vh",
+        scale: 0.98,
+        rotation: -1.2,
+      });
+      revealPiece("TS_optics.png", 10, 6, {
+        y: "-18vh",
+        x: "2vw",
+        scale: 0.985,
+      });
+      revealPiece("TS_left.png", 20, 6, {
+        x: "-34vw",
+        rotation: -1.2,
+      });
+      revealPiece("TS_right.png", 30, 6, {
+        x: "34vw",
+        rotation: 1.2,
+      });
+      revealPiece("TS_lens.png", 40, 6, {
+        x: "12vw",
+        y: "-8vh",
+        scale: 0.9,
       });
 
       /*
-       * State copy changes only after the corresponding instrument component
-       * reaches LOCK. It remains readable while the next component travels,
-       * then yields just before that next component locks.
+       * CORE INTERRUPTION
+       * 48–50: everything already locked explodes out.
+       * 50–58: TS_core is the only instrument visible.
+       * 58–60: core slides away while the pre-core locked stack returns.
+       * TS_core never comes back after this handoff.
        */
-      copyStates.forEach((copy, index) => {
-        const state = bodyTimeline[index];
-        const enterAt = index === bodyTimeline.length - 1 ? 88 : state.reveal[1];
-        const nextState = bodyTimeline[index + 1];
-        const leaveAt = nextState ? nextState.reveal[1] : 100;
-        const inDuration = 1.15;
-        const outDuration = 1.15;
+      const explosion = {
+        "TS_hand.png": { x: "-4vw", y: "-28vh", rotation: -5, scale: 0.96 },
+        "TS_optics.png": { x: "5vw", y: "-22vh", rotation: 4, scale: 0.95 },
+        "TS_left.png": { x: "-38vw", y: "4vh", rotation: -6, scale: 0.95 },
+        "TS_right.png": { x: "38vw", y: "-3vh", rotation: 6, scale: 0.95 },
+        "TS_lens.png": { x: "18vw", y: "-18vh", rotation: 5, scale: 0.88 },
+      } as const;
 
+      preCoreAssets.forEach((asset) => {
+        const target = piece(asset);
+        if (!target) return;
         timeline.to(
-          copy,
+          target,
           {
-            opacity: 1,
-            y: 0,
-            duration: inDuration,
-            ease: "power3.out",
+            ...explosion[asset],
+            opacity: 0,
+            duration: 2,
+            ease: "power3.in",
           },
-          enterAt,
+          48,
         );
-
-        if (nextState) {
-          timeline.to(
-            copy,
-            {
-              opacity: 0,
-              y: -18,
-              duration: outDuration,
-              ease: "power2.inOut",
-            },
-            Math.max(enterAt + inDuration, leaveAt - outDuration),
-          );
-        }
       });
 
-      outlineStates.forEach((outline, index) => {
-        const state = bodyTimeline[index];
-        const enterAt =
-          index === bodyTimeline.length - 1
-            ? 88
-            : Math.max(0, state.reveal[1] - 0.6);
-        const nextState = bodyTimeline[index + 1];
-        const leaveAt = nextState ? nextState.reveal[1] : 100;
+      revealPiece("TS_core.png", 50, 5.5, {
+        y: "13vh",
+        x: "-2vw",
+        scale: 0.92,
+        rotation: -1.5,
+      });
+
+      const core = piece("TS_core.png");
+      if (core) {
+        timeline.to(
+          core,
+          {
+            x: "30vw",
+            y: "-3vh",
+            rotation: 4,
+            scale: 0.96,
+            opacity: 0,
+            duration: 2,
+            ease: "power3.inOut",
+          },
+          58,
+        );
+      }
+
+      preCoreAssets.forEach((asset) => {
+        const target = piece(asset);
+        if (!target) return;
 
         timeline.to(
-          outline,
+          target,
           {
+            x: 0,
+            y: 0,
+            rotation: 0,
+            scale: 1,
             opacity: 1,
-            duration: 0.8,
-            ease: "power2.out",
+            duration: 2,
+            ease: "power3.out",
           },
-          enterAt,
+          58,
+        );
+      });
+
+      revealPiece("TS_disp.png", 60, 6, {
+        x: "12vw",
+        y: "15vh",
+        scale: 0.92,
+        rotation: 1.2,
+      });
+      revealPiece("TS_base.png", 70, 6, {
+        y: "24vh",
+        scale: 0.96,
+        rotation: 1.5,
+      });
+      revealPiece("TS_foot.png", 80, 6, {
+        y: "30vh",
+        scale: 0.96,
+      });
+
+      /*
+       * Final whole-instrument reveal. Because TS_comp uses the same canonical
+       * box as every piece, the cross-resolve cannot drift or resize.
+       */
+      postCoreAssets.forEach((asset) => {
+        const target = piece(asset);
+        if (!target) return;
+        timeline.to(
+          target,
+          {
+            opacity: 0,
+            scale: 0.992,
+            duration: 8,
+            ease: "power1.inOut",
+          },
+          90,
+        );
+      });
+
+      timeline.fromTo(
+        finalPiece,
+        { opacity: 0, scale: 1.008, filter: "blur(5px)" },
+        {
+          opacity: 1,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 8,
+          ease: "power2.inOut",
+        },
+        90,
+      );
+
+      /*
+       * Foreground transition system.
+       * Heading = blurred ghost + clipped sharp face blending into one layer.
+       * Services = character-by-character reveal tied to scroll.
+       */
+      copyStates.forEach((copy, index) => {
+        const start = index * 10;
+        const nextStart = (index + 1) * 10;
+
+        const headingMain = copy.querySelector<HTMLElement>("[data-heading-main]");
+        const headingGhost =
+          copy.querySelector<HTMLElement>("[data-heading-ghost]");
+        const subheading =
+          copy.querySelector<HTMLElement>("[data-body-subheading]");
+        const intro = copy.querySelector<HTMLElement>("[data-body-intro]");
+        const staticMeta = copy.querySelectorAll<HTMLElement>(
+          "[data-body-static-meta]",
+        );
+        const serviceBlocks = Array.from(
+          copy.querySelectorAll<HTMLElement>("[data-body-service]"),
         );
 
-        if (nextState) {
+        timeline.set(copy, { autoAlpha: 1 }, start + 0.15);
+
+        if (headingGhost) {
+          timeline.fromTo(
+            headingGhost,
+            { opacity: 0, x: -16, filter: "blur(16px)" },
+            {
+              opacity: 0.68,
+              x: 0,
+              filter: "blur(5px)",
+              duration: 0.8,
+              ease: "power3.out",
+            },
+            start + 0.2,
+          );
+          timeline.to(
+            headingGhost,
+            {
+              opacity: 0,
+              filter: "blur(0px)",
+              duration: 0.8,
+              ease: "power2.out",
+            },
+            start + 1.0,
+          );
+        }
+
+        if (headingMain) {
+          timeline.fromTo(
+            headingMain,
+            {
+              opacity: 0,
+              x: 18,
+              filter: "blur(10px)",
+              clipPath: "inset(0 100% 0 0)",
+            },
+            {
+              opacity: 1,
+              x: 0,
+              filter: "blur(0px)",
+              clipPath: "inset(0 0% 0 0)",
+              duration: 1.55,
+              ease: "power3.out",
+            },
+            start + 0.35,
+          );
+        }
+
+        if (subheading) {
+          timeline.fromTo(
+            subheading,
+            { opacity: 0, y: 14, filter: "blur(5px)" },
+            {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              duration: 1.0,
+              ease: "power3.out",
+            },
+            start + 0.8,
+          );
+        }
+
+        if (intro) {
+          timeline.fromTo(
+            intro,
+            { opacity: 0, y: 16, filter: "blur(5px)" },
+            {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              duration: 1.1,
+              ease: "power3.out",
+            },
+            start + 1.0,
+          );
+        }
+
+        staticMeta.forEach((node) => {
+          timeline.fromTo(
+            node,
+            { opacity: 0, y: 8 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.9,
+              ease: "power2.out",
+            },
+            start + 1.15,
+          );
+        });
+
+        serviceBlocks.forEach((block, serviceIndex) => {
+          const diamond =
+            block.querySelector<HTMLElement>("[data-service-diamond]");
+          const chars = Array.from(
+            block.querySelectorAll<HTMLElement>("[data-type-char]"),
+          );
+          const serviceStart = start + 1.65 + serviceIndex * 0.72;
+
+          if (diamond) {
+            timeline.fromTo(
+              diamond,
+              { opacity: 0, scale: 0.2, rotation: 45 },
+              {
+                opacity: 1,
+                scale: 1,
+                rotation: 45,
+                duration: 0.55,
+                ease: "back.out(1.7)",
+              },
+              serviceStart,
+            );
+          }
+
+          if (chars.length) {
+            timeline.to(
+              chars,
+              {
+                opacity: 1,
+                duration: 0.06,
+                stagger: {
+                  each: 0.018,
+                  from: "start",
+                },
+                ease: "none",
+              },
+              serviceStart + 0.18,
+            );
+          }
+        });
+
+        const outline = outlineStates[index];
+        if (outline) {
           timeline.to(
             outline,
             {
-              opacity: 0,
+              opacity: 1,
+              duration: 0.8,
+              ease: "power2.out",
+            },
+            start + 0.4,
+          );
+        }
+
+        if (index < copyStates.length - 1) {
+          timeline.to(
+            copy,
+            {
+              autoAlpha: 0,
               duration: 0.8,
               ease: "power2.inOut",
             },
-            leaveAt - 0.8,
+            nextStart - 0.8,
           );
+
+          if (outline) {
+            timeline.to(
+              outline,
+              {
+                opacity: 0,
+                duration: 0.8,
+                ease: "power2.inOut",
+              },
+              nextStart - 0.8,
+            );
+          }
         }
       });
 
@@ -215,40 +648,6 @@ export function Body() {
         { x: "-2.5vw" },
         { x: "2.5vw", duration: 100, ease: "none" },
         0,
-      );
-
-      /*
-       * State 10 contract:
-       * 88–90% settle TS_comp in place while hidden.
-       * 90–100% cross-resolve cumulative stack -> TS_comp.
-       */
-      timeline.to(
-        finalPiece,
-        {
-          y: 0,
-          scale: 1,
-          duration: 2,
-          ease: "power3.out",
-        },
-        88,
-      );
-      timeline.to(
-        pieceStack,
-        {
-          opacity: 0,
-          duration: 10,
-          ease: "none",
-        },
-        90,
-      );
-      timeline.to(
-        finalPiece,
-        {
-          opacity: 1,
-          duration: 10,
-          ease: "none",
-        },
-        90,
       );
 
       return () => {
@@ -274,7 +673,7 @@ export function Body() {
             <p>{state.intro}</p>
             <ul>
               {state.services.map((service) => (
-                <li key={`${state.index}-${service.label}`}>
+                <li key={`${state.index}-${service.slot}-${service.label}`}>
                   <strong>{service.label}</strong>: {service.copy}
                 </li>
               ))}
@@ -286,134 +685,172 @@ export function Body() {
       <div className={styles.stickyStage} data-body-sticky-stage>
         <div className={styles.backgroundLayer} aria-hidden="true" />
 
-        <div className={styles.scene} aria-hidden="true">
-          <div className={styles.stageRule} />
+        <div className={styles.scene}>
+          <div className={styles.stageRule} aria-hidden="true" />
 
-          <div className={styles.instrumentStage}>
-            <i className={styles.assemblyAxis} />
-
-            <div className={styles.instrumentCanvas}>
-              {bodyTimeline.slice(0, 9).map((stage) => (
-                <div
-                  key={stage.asset}
-                  className={styles.instrumentPiece}
-                  data-body-piece={stage.asset}
-                >
-                  <Image
-                    src={`${ASSET_ROOT}/${stage.asset}`}
-                    alt=""
-                    fill
-                    sizes="(max-width: 767px) 78vw, 36vw"
-                    unoptimized
-                    draggable={false}
-                  />
-                </div>
-              ))}
-
+          <div
+            className={styles.instrumentCanvas}
+            style={assemblyStyle}
+            data-body-assembly
+            aria-hidden="true"
+          >
+            {bodyTimeline.slice(0, 9).map((stage) => (
               <div
-                className={`${styles.instrumentPiece} ${styles.finalPiece}`}
-                data-body-final-piece
+                key={stage.asset}
+                className={styles.instrumentPiece}
+                data-body-piece={stage.asset}
               >
                 <Image
-                  src={`${ASSET_ROOT}/TS_comp.png`}
+                  src={`${ASSET_ROOT}/${stage.asset}`}
                   alt=""
                   fill
-                  sizes="(max-width: 767px) 78vw, 36vw"
+                  sizes="(max-width: 767px) 77vw, 30vw"
                   unoptimized
                   draggable={false}
                 />
               </div>
+            ))}
+
+            <div
+              className={`${styles.instrumentPiece} ${styles.finalPiece}`}
+              data-body-final-piece
+            >
+              <Image
+                src={`${ASSET_ROOT}/TS_comp.png`}
+                alt=""
+                fill
+                sizes="(max-width: 767px) 77vw, 30vw"
+                unoptimized
+                draggable={false}
+              />
             </div>
           </div>
 
           <div
             className={styles.outlineRail}
             data-body-outline-rail
+            aria-hidden="true"
           >
-            {bodyStates.map((state) => (
-              <div
-                key={`outline-${state.index}`}
-                className={styles.outlineState}
-                data-body-outline={state.index}
-              >
-                <span>{state.outline}</span>
-                <span>{state.outline}</span>
-              </div>
-            ))}
+            {bodyStates.map((state, index) => {
+              const layout = bodyFigmaLayouts[index];
+              return (
+                <div
+                  key={`outline-${state.index}`}
+                  className={styles.outlineState}
+                  data-body-outline={state.index}
+                  style={textVars(layout.outline)}
+                >
+                  <span>{state.outline}</span>
+                  <span>{state.outline}</span>
+                </div>
+              );
+            })}
           </div>
 
           <div className={styles.copyRail}>
-            {bodyStates.map((state) => (
-              <article
-                key={state.index}
-                className={`${styles.stateCopy} ${
-                  state.layout === "deep" ? styles.deepLayout : styles.standardLayout
-                }`}
-                data-body-copy={state.index}
-              >
-                <p className={styles.kicker}>LIAHONA / SERVICE SYSTEM</p>
+            {bodyStates.map((state, index) => {
+              const layout = bodyFigmaLayouts[index];
 
-                <h3
-                  className={`${styles.heading} ${
-                    state.headingScale === "xl"
-                      ? styles.headingXl
-                      : state.headingScale === "lg"
-                        ? styles.headingLg
-                        : styles.headingMd
-                  } ${
-                    state.mobileHeadingScale === "xl"
-                      ? styles.mobileHeadingXl
-                      : state.mobileHeadingScale === "lg"
-                        ? styles.mobileHeadingLg
-                        : styles.mobileHeadingMd
-                  }`}
+              return (
+                <article
+                  key={state.index}
+                  className={styles.stateCopy}
+                  data-body-copy={state.index}
                 >
-                  {state.heading}
-                </h3>
-
-                <p className={styles.subheading}>{state.subheading}</p>
-                <p className={styles.microcopy}>
-                  REGISTERED SURVEYORS&nbsp;&nbsp;/&nbsp;&nbsp;MAPPING CONSULTANTS
-                </p>
-                <p className={styles.intro}>{state.intro}</p>
-
-                <div className={styles.servicesGrid}>
-                  {state.services.map((service, serviceIndex) => (
-                    <div
-                      key={`${state.index}-${service.label}`}
-                      className={`${styles.serviceItem} ${
-                        serviceIndex === 0
-                          ? styles.serviceOne
-                          : serviceIndex === 1
-                            ? styles.serviceTwo
-                            : styles.serviceThree
-                      }`}
+                  <h3
+                    className={`${styles.heading} ${
+                      state.mobileHeadingScale === "xl"
+                        ? styles.mobileHeadingXl
+                        : state.mobileHeadingScale === "lg"
+                          ? styles.mobileHeadingLg
+                          : styles.mobileHeadingMd
+                    }`}
+                    style={textVars(layout.heading)}
+                    data-text={state.heading}
+                  >
+                    <span
+                      className={styles.headingGhost}
+                      data-heading-ghost
+                      aria-hidden="true"
                     >
-                      <ServiceDiamond />
-                      <div>
-                        <p className={styles.serviceLabel}>{service.label}</p>
-                        <p className={styles.serviceCopy}>{service.copy}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                      {state.heading}
+                    </span>
+                    <span className={styles.headingMain} data-heading-main>
+                      {state.heading}
+                    </span>
+                  </h3>
 
-                <div className={styles.bottomLinks}>
-                  <i className={styles.bottomRule} />
-                  <span>{state.bottomLinks[0]}</span>
-                  <i className={styles.bottomDivider} />
-                  <span>{state.bottomLinks[1]}</span>
-                </div>
+                  {state.subheading && layout.subheading ? (
+                    <p
+                      className={styles.subheading}
+                      style={textVars(layout.subheading)}
+                      data-body-subheading
+                    >
+                      {state.subheading}
+                    </p>
+                  ) : null}
 
-                <div className={styles.techMeta}>
-                  <span className={styles.fieldSystem}>
-                    FIELD SYSTEM / {String(state.index).padStart(2, "0")}
+                  <p
+                    className={styles.intro}
+                    style={textVars(layout.intro)}
+                    data-body-intro
+                  >
+                    {state.intro}
+                  </p>
+
+                  <div className={styles.servicesGrid}>
+                    {state.services.map((service, serviceIndex) => (
+                      <ServiceBlock
+                        key={`${state.index}-${service.slot}-${service.label}`}
+                        stateIndex={index}
+                        serviceIndex={serviceIndex}
+                      />
+                    ))}
+                  </div>
+
+                  <i
+                    className={styles.bottomRule}
+                    style={shapeVars(layout.bottomRule)}
+                    data-body-static-meta
+                    aria-hidden="true"
+                  />
+                  <span
+                    className={styles.bottomLink}
+                    style={textVars(layout.bottomLinkOne)}
+                    data-body-static-meta
+                  >
+                    {state.bottomLinks[0]}
                   </span>
-                  <i className={styles.techLead} />
-                  <span className={styles.techNote}>{state.techNote}</span>
-                </div>
-              </article>
-            ))}
+                  <i
+                    className={styles.bottomDivider}
+                    style={shapeVars(layout.bottomDivider)}
+                    data-body-static-meta
+                    aria-hidden="true"
+                  />
+                  <span
+                    className={styles.bottomLink}
+                    style={textVars(layout.bottomLinkTwo)}
+                    data-body-static-meta
+                  >
+                    {state.bottomLinks[1]}
+                  </span>
+
+                  <i
+                    className={styles.techLead}
+                    style={shapeVars(layout.techLead)}
+                    data-body-static-meta
+                    aria-hidden="true"
+                  />
+                  <span
+                    className={styles.techNote}
+                    style={textVars(layout.techNote)}
+                    data-body-static-meta
+                  >
+                    {state.techNote}
+                  </span>
+                </article>
+              );
+            })}
           </div>
 
           <p className={styles.coordinates}>

@@ -72,305 +72,20 @@
 }
 
 .stateCopy {
-  will-change: transform, opacity;
-}
-
-.kicker {
-  position: absolute;
-  left: 8.6458cqw;
-  top: 7.7778cqh;
-  margin: 0;
-  color: #998a78;
-  font-family: var(--font-technical);
-  font-size: 0.5729cqw;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: 0.15625cqw;
-  white-space: nowrap;
-}
-
-.heading {
-  position: absolute;
-  left: 8.6458cqw;
-  top: 13.8889cqh;
-  width: 33.8542cqw;
-  margin: 0;
-  color: #a1331a;
-  font-family: var(--font-condensed-display);
-  font-weight: 400;
-  letter-spacing: -0.1042cqw;
-  text-transform: uppercase;
-  white-space: normal;
-}
-
-.headingXl {
-  font-size: 7.9167cqw;
-  line-height: 6.8083cqw;
-}
-
-.headingLg {
-  font-size: 6.875cqw;
-  line-height: 5.9125cqw;
-}
-
-.headingMd {
-  font-size: 6.0417cqw;
-  line-height: 5.1958cqw;
-}
-
-.subheading {
-  position: absolute;
-  left: 8.8542cqw;
-  width: 33.8542cqw;
-  margin: 0;
-  color: #dbcfbd;
-  font-family: var(--font-body);
-  font-size: 1.25cqw;
-  font-weight: 600;
-  line-height: normal;
-  letter-spacing: 0.3125cqw;
-  text-transform: uppercase;
-}
-
-.standardLayout .subheading {
-  top: 29.1667cqh;
-}
-
-.deepLayout .subheading {
-  top: 35.3704cqh;
-}
-
-.microcopy {
-  position: absolute;
-  left: 8.8542cqw;
-  margin: 0;
-  color: #c24f29;
-  font-family: var(--font-technical);
-  font-size: 0.5729cqw;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: 0.1667cqw;
-  white-space: nowrap;
-}
-
-.standardLayout .microcopy {
-  top: 33.7037cqh;
-}
-
-.deepLayout .microcopy {
-  top: 39.9074cqh;
-}
-
-.intro {
-  position: absolute;
-  left: 8.8542cqw;
-  width: 29.1667cqw;
-  margin: 0;
-  color: #c2b2a1;
-  font-family: var(--font-body);
-  font-size: 1.25cqw;
-  font-weight: 400;
-  line-height: 1.8229cqw;
-  letter-spacing: 0.0365cqw;
-}
-
-.standardLayout .intro {
-  top: 39.8148cqh;
-}
-
-.deepLayout .intro {
-  top: 46.2963cqh;
-}
-
-.servicesGrid {
-  position: absolute;
-  inset: 0;
-}
-
-.serviceItem {
-  position: absolute;
-  display: grid;
-  grid-template-columns: 0.9375cqw 13.0208cqw;
-  column-gap: 0.9375cqw;
-  align-items: start;
-  width: 15.625cqw;
-}
-
-.standardLayout .serviceOne,
-.standardLayout .serviceTwo {
-  top: 57.4074cqh;
-}
-
-.standardLayout .serviceThree {
-  top: 69.6296cqh;
-}
-
-.deepLayout .serviceOne,
-.deepLayout .serviceTwo {
-  top: 63.8889cqh;
-}
-
-.deepLayout .serviceThree {
-  top: 75.1852cqh;
-}
-
-.serviceOne,
-.serviceThree {
-  left: 8.8542cqw;
-}
-
-.serviceTwo {
-  left: 25.78125cqw;
-}
-
-.serviceDiamond {
-  display: block;
-  width: 0.6629cqw;
-  height: 0.6629cqw;
-  margin-top: 0.15625cqw;
-  border: max(1px, 0.0521cqw) solid rgb(194 79 41 / 0.82);
-  transform: rotate(45deg);
-}
-
-.serviceLabel {
-  margin: 0;
-  color: #dbcfbd;
-  font-family: var(--font-body);
-  font-size: 0.7292cqw;
-  font-weight: 600;
-  line-height: normal;
-  letter-spacing: 0.0521cqw;
-  text-transform: uppercase;
-}
-
-.serviceCopy {
-  width: 13.0208cqw;
-  margin: 0.4167cqw 0 0;
-  color: #a89c8c;
-  font-family: var(--font-body);
-  font-size: 0.6771cqw;
-  font-weight: 400;
-  line-height: 0.9896cqw;
-  letter-spacing: 0.0104cqw;
-}
-
-.bottomLinks {
-  position: absolute;
-  left: 8.8542cqw;
-  width: 33.3333cqw;
-  height: 4.6296cqh;
-  color: #dbcfbd;
-  font-family: var(--font-technical);
-  font-size: 0.625cqw;
-  font-weight: 500;
-  letter-spacing: 0.0625cqw;
-  text-transform: uppercase;
-}
-
-.standardLayout .bottomLinks {
-  top: 81.4815cqh;
-}
-
-.deepLayout .bottomLinks {
-  top: 85.9259cqh;
-}
-
-.bottomRule {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 33.3333cqw;
-  height: max(1px, 0.0521cqw);
-  background: rgb(194 79 41 / 0.45);
-}
-
-.bottomLinks > span {
-  position: absolute;
-  top: 2.037cqh;
-  white-space: nowrap;
-}
-
-.bottomLinks > span:nth-of-type(1) {
-  left: 0;
-}
-
-.bottomLinks > span:nth-of-type(2) {
-  left: 17.1875cqw;
-}
-
-.bottomDivider {
-  position: absolute;
-  left: 15.5208cqw;
-  top: 1.5741cqh;
-  width: max(1px, 0.0521cqw);
-  height: 2.5926cqh;
-  background: rgb(194 79 41 / 0.45);
-}
-
-.techMeta {
-  position: absolute;
-  inset: 0;
-  font-family: var(--font-technical);
-}
-
-.fieldSystem {
-  position: absolute;
-  left: 82.5cqw;
-  top: 7.5926cqh;
-  width: 14.0625cqw;
-  color: rgb(94 74 64 / 0.9);
-  font-size: 0.5208cqw;
-  font-weight: 500;
-  letter-spacing: 0.1042cqw;
-  white-space: nowrap;
-}
-
-.techLead {
-  position: absolute;
-  left: 81.5625cqw;
-  top: 21.4815cqh;
-  width: 1.25cqw;
-  height: max(1px, 0.0521cqw);
-  background: rgb(194 79 41 / 0.7);
-}
-
-.techNote {
-  position: absolute;
-  left: 83.3333cqw;
-  top: 20.7407cqh;
-  width: 12.7604cqw;
-  color: rgb(163 69 38 / 0.95);
-  font-size: 0.5208cqw;
-  font-weight: 500;
-  line-height: 0.8333cqw;
-  letter-spacing: 0.0729cqw;
-  white-space: pre-wrap;
-}
-
-.instrumentStage {
-  position: absolute;
-  left: 45.3125cqw;
-  top: 2.7778cqh;
-  z-index: var(--z-instrument);
-  width: 39.5833cqw;
-  height: 94.4444cqh;
-}
-
-.assemblyAxis {
-  position: absolute;
-  left: 49.6053%;
-  top: 6.8627%;
-  width: max(1px, 0.0521cqw);
-  height: 83.8235%;
-  background: rgb(194 79 41 / 0.18);
+  visibility: hidden;
+  opacity: 0;
+  will-change: opacity, visibility;
 }
 
 .instrumentCanvas {
   position: absolute;
-  left: 5.2632%;
-  top: 0;
-  width: 89.4737%;
-  height: 100%;
+  left: var(--assembly-x);
+  top: var(--assembly-y);
+  z-index: var(--z-instrument);
+  width: var(--assembly-w);
+  height: var(--assembly-h);
+  aspect-ratio: 2 / 3;
+  isolation: isolate;
 }
 
 .instrumentPiece {
@@ -378,7 +93,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
   transform: translate3d(0, 0, 0);
 }
 
@@ -390,32 +105,202 @@
   opacity: 0;
 }
 
+/*
+ * The typography is intentionally ABOVE the instrument.
+ * This is the actual overlay plane; copy remains one layer higher.
+ */
 .outlineRail {
   position: absolute;
   inset: 0;
   z-index: var(--z-outline-type);
   will-change: transform;
+  pointer-events: none;
 }
 
 .outlineState {
   position: absolute;
-  left: 40.625cqw;
-  top: 13.4259cqh;
+  left: var(--x);
+  top: var(--y);
   display: flex;
   flex-direction: column;
-  width: 58cqw;
+  width: var(--w);
+  height: var(--h);
   margin: 0;
   color: transparent;
   font-family: var(--font-condensed-display);
-  font-size: 16.9792cqw;
+  font-size: var(--fs);
   font-weight: 400;
-  line-height: 12.9167cqw;
-  letter-spacing: -0.4167cqw;
+  line-height: var(--lh);
+  letter-spacing: var(--ls);
   text-transform: uppercase;
   white-space: nowrap;
   -webkit-text-stroke: max(1px, 0.0521cqw) rgb(113 87 66 / 0.28);
   opacity: 0;
   will-change: opacity;
+}
+
+.heading {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  height: auto;
+  margin: 0;
+  color: #a1331a;
+  font-family: var(--font-condensed-display);
+  font-size: var(--fs);
+  font-weight: 400;
+  line-height: var(--lh);
+  letter-spacing: var(--ls);
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+.headingMain,
+.headingGhost {
+  display: block;
+  width: 100%;
+}
+
+.headingMain {
+  position: relative;
+  z-index: 2;
+  will-change: opacity, transform, filter, clip-path;
+}
+
+.headingGhost {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  color: #c14627;
+  mix-blend-mode: screen;
+  will-change: opacity, transform, filter;
+}
+
+.subheading,
+.intro,
+.serviceLabel,
+.serviceCopy,
+.bottomLink,
+.techNote {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  min-height: var(--h);
+  margin: 0;
+}
+
+.subheading {
+  color: #dbcfbd;
+  font-family: var(--font-body);
+  font-size: var(--fs);
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: var(--ls);
+  text-transform: uppercase;
+}
+
+.intro {
+  color: #c2b2a1;
+  font-family: var(--font-body);
+  font-size: var(--fs);
+  font-weight: 400;
+  line-height: var(--lh);
+  letter-spacing: var(--ls);
+}
+
+.servicesGrid {
+  position: absolute;
+  inset: 0;
+}
+
+.serviceBlock {
+  position: absolute;
+  inset: 0;
+}
+
+.serviceDiamond {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  height: var(--h);
+  border: max(1px, 0.0521cqw) solid rgb(194 79 41 / 0.82);
+  transform: rotate(45deg);
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.serviceLabel {
+  color: #dbcfbd;
+  font-family: var(--font-body);
+  font-size: var(--fs);
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: var(--ls);
+  text-transform: uppercase;
+}
+
+.serviceCopy {
+  color: #a89c8c;
+  font-family: var(--font-body);
+  font-size: var(--fs);
+  font-weight: 400;
+  line-height: var(--lh);
+  letter-spacing: var(--ls);
+}
+
+.typingText,
+.typingText > span {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+.typeChar {
+  display: inline;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.bottomRule,
+.bottomDivider,
+.techLead {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  height: var(--h);
+}
+
+.bottomRule,
+.bottomDivider {
+  background: rgb(194 79 41 / 0.45);
+}
+
+.bottomLink {
+  color: #dbcfbd;
+  font-family: var(--font-technical);
+  font-size: var(--fs);
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: var(--ls);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.techLead {
+  background: rgb(194 79 41 / 0.7);
+}
+
+.techNote {
+  color: rgb(163 69 38 / 0.95);
+  font-family: var(--font-technical);
+  font-size: var(--fs);
+  font-weight: 500;
+  line-height: var(--lh);
+  letter-spacing: var(--ls);
+  white-space: pre-wrap;
 }
 
 .coordinates {
@@ -461,23 +346,7 @@
   display: none;
 }
 
-@media (min-width: 1200px) {
-  /*
-   * Desktop masters are authored at 1920×1080. Scaling is height-led so every
-   * 16:9 desktop maps 1:1 proportionally; extra width becomes cinematic field
-   * instead of distorting the Figma composition.
-   */
-  .scene {
-    left: 0;
-  }
-}
-
 @media (min-width: 768px) and (max-width: 1199px) {
-  /*
-   * Figma's tablet behavior is explicitly a cinematic crop. At the locked
-   * 1024×820 checkpoint this places the 16:9 production scene approximately
-   * 64px beyond the left viewport edge while preserving the copy column.
-   */
   .scene {
     left: -6.25vw;
   }
@@ -501,56 +370,45 @@
   }
 
   .stageRule,
-  .microcopy,
-  .bottomLinks,
-  .techMeta,
+  .bottomRule,
+  .bottomDivider,
+  .bottomLink,
+  .techLead,
+  .techNote,
   .coordinates,
   .scaleTicks {
     display: none;
   }
 
-  .instrumentStage {
+  /*
+   * Mobile checkpoint uses the same 2:3 registration principle:
+   * x86 / y72 / 298×447 in the 390×844 master.
+   */
+  .instrumentCanvas {
     left: 22.0513vw;
     top: 8.5308svh;
     width: 76.4103vw;
-    height: auto;
-    aspect-ratio: 2 / 3;
-  }
-
-  .assemblyAxis {
-    display: none;
-  }
-
-  .instrumentCanvas {
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    height: 52.9621svh;
   }
 
   .outlineState {
     left: 23.5897vw;
     top: 12.4408svh;
     width: 110vw;
+    height: auto;
     font-size: 31.7949vw;
     line-height: 29.3839svh;
     letter-spacing: -0.7692vw;
     -webkit-text-stroke: 1px rgb(113 87 66 / 0.28);
   }
 
-  .kicker {
-    left: 6.1538vw;
-    top: 4.2654svh;
-    color: #7a6e5e;
-    font-size: 2.0513vw;
-    letter-spacing: 0.4359vw;
-  }
-
   .heading {
     left: 6.1538vw;
     top: 9.2417svh;
     width: 87.6923vw;
-    letter-spacing: -0.2564vw;
+    height: auto;
     line-height: 0.91;
+    letter-spacing: -0.2564vw;
   }
 
   .mobileHeadingXl {
@@ -565,70 +423,75 @@
     font-size: 11.7949vw;
   }
 
-  .subheading,
-  .standardLayout .subheading,
-  .deepLayout .subheading {
+  .subheading {
     left: 6.6667vw;
     top: 24.6445svh;
     width: 87.1795vw;
-    color: #ded1bd;
+    height: auto;
     font-size: 3.0769vw;
     line-height: 1.35;
     letter-spacing: 0.5385vw;
   }
 
-  .intro,
-  .standardLayout .intro,
-  .deepLayout .intro {
+  .intro {
     left: 6.1538vw;
     top: 61.1374svh;
     width: 87.1795vw;
+    height: auto;
     color: #ded1bd;
     font-size: 4.359vw;
     line-height: 2.8436svh;
     letter-spacing: 0.0256vw;
   }
 
-  .servicesGrid {
-    inset: 0;
-  }
-
-  .serviceItem {
-    left: 6.1538vw !important;
-    display: block;
-    width: 87.1795vw;
-  }
-
-  .standardLayout .serviceOne,
-  .deepLayout .serviceOne {
-    top: 77.2512svh;
-  }
-
-  .standardLayout .serviceTwo,
-  .deepLayout .serviceTwo {
-    top: 84.5972svh;
-  }
-
-  .standardLayout .serviceThree,
-  .deepLayout .serviceThree {
-    top: 91.9431svh;
-  }
-
   .serviceDiamond {
     display: none;
   }
 
+  .serviceBlock[data-service-slot="1"] .serviceLabel {
+    left: 6.1538vw;
+    top: 77.2512svh;
+  }
+
+  .serviceBlock[data-service-slot="1"] .serviceCopy {
+    left: 6.1538vw;
+    top: 79.3839svh;
+  }
+
+  .serviceBlock[data-service-slot="2"] .serviceLabel {
+    left: 6.1538vw;
+    top: 84.5972svh;
+  }
+
+  .serviceBlock[data-service-slot="2"] .serviceCopy {
+    left: 6.1538vw;
+    top: 86.7299svh;
+  }
+
+  .serviceBlock[data-service-slot="3"] .serviceLabel {
+    left: 6.1538vw;
+    top: 91.9431svh;
+  }
+
+  .serviceBlock[data-service-slot="3"] .serviceCopy {
+    left: 6.1538vw;
+    top: 94.0758svh;
+  }
+
   .serviceLabel {
+    width: 87.1795vw;
+    height: auto;
     color: #ded1bd;
     font-family: var(--font-technical);
     font-size: 2.5641vw;
     font-weight: 500;
+    line-height: 1.25;
     letter-spacing: 0.2051vw;
   }
 
   .serviceCopy {
     width: 82.0513vw;
-    margin-top: 0.8294svh;
+    height: auto;
     color: #7a6e5e;
     font-size: 2.8205vw;
     line-height: 1.35;
@@ -660,7 +523,10 @@
   .instrumentPiece,
   .stateCopy,
   .outlineState,
-  .outlineRail {
+  .outlineRail,
+  .headingMain,
+  .headingGhost,
+  .typeChar {
     will-change: auto;
   }
 }
