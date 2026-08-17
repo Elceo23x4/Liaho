@@ -68,7 +68,7 @@
 }
 
 .copyRail {
-  z-index: 40;
+  z-index: 70;
 }
 
 .stateCopy {
@@ -110,10 +110,9 @@
 .outlineRail {
   position: absolute;
   inset: 0;
-  z-index: 35;
+  z-index: 55;
   will-change: transform;
   pointer-events: none;
-  mix-blend-mode: screen;
 }
 
 .outlineState {
@@ -125,7 +124,7 @@
   width: var(--w);
   height: var(--h);
   margin: 0;
-  color: rgb(145 108 82 / 0.04);
+  color: transparent;
   font-family: var(--font-condensed-display);
   font-size: var(--fs);
   font-weight: 400;
@@ -133,10 +132,29 @@
   letter-spacing: var(--ls);
   text-transform: uppercase;
   white-space: nowrap;
-  -webkit-text-stroke: max(1px, 0.0521cqw) rgb(113 87 66 / 0.36);
-  text-shadow: 0 0 18px rgb(194 79 41 / 0.08);
+  -webkit-text-stroke: max(1px, 0.0625cqw) rgb(176 156 133 / 0.17);
   opacity: 0;
   will-change: opacity;
+}
+
+.outlineUpper,
+.outlineLower {
+  display: block;
+  width: 100%;
+}
+
+.outlineUpper {
+  /* Exact current Figma upper-line treatment: #090706 at 40% fill. */
+  color: rgb(9 7 6 / 0.4);
+}
+
+.outlineLower {
+  /* Exact requested lower-line treatment: stroke only, no fill. */
+  color: transparent;
+}
+
+.outlineState[data-body-outline="2"] {
+  -webkit-text-stroke-color: rgb(176 156 133 / 0.2);
 }
 
 .heading {
@@ -389,168 +407,222 @@
     display: none;
   }
 
+  /*
+   * Small-screen instrument: deliberately smaller than the previous pass so
+   * the foreground/service story owns the readable space.
+   */
   .instrumentCanvas {
-    left: 34vw;
-    top: 10svh;
-    width: 58vw;
-    height: 87vw;
+    left: 57vw;
+    top: 7.5svh;
+    width: 38vw;
+    height: 57vw;
   }
 
   .outlineRail {
-    z-index: 32;
+    z-index: 55;
   }
 
   .outlineState {
-    left: 16vw;
-    top: 14svh;
-    width: 90vw;
+    left: 30vw;
+    top: 10svh;
+    width: 88vw;
     height: auto;
-    font-size: 25vw;
+    font-size: 21vw;
     line-height: 0.82;
-    letter-spacing: -0.75vw;
-    -webkit-text-stroke: 1px rgb(113 87 66 / 0.28);
+    letter-spacing: -0.62vw;
+    -webkit-text-stroke-width: 1px;
+  }
+
+  /*
+   * One uniform translucent dark field for ALL foreground/service content.
+   * It prevents the station/overlay/background from destroying readability.
+   */
+  .stateCopy {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    inset: 0;
+    padding: 5.2svh 5.4vw 6.5svh;
+    background: rgb(4 4 3 / 0.72);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    overflow: hidden;
   }
 
   .heading {
-    left: 5.4vw;
-    top: 6.6svh;
-    width: 52vw;
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 59vw;
+    height: auto;
+    flex: 0 0 auto;
     line-height: 0.9;
-    letter-spacing: -0.3vw;
+    letter-spacing: -0.28vw;
   }
 
   .mobileHeadingXl {
-    font-size: 14vw;
+    font-size: 13.2vw;
   }
 
   .mobileHeadingLg {
-    font-size: 12vw;
+    font-size: 11.4vw;
   }
 
   .mobileHeadingMd {
-    font-size: 10vw;
+    font-size: 9.5vw;
   }
 
   .subheading {
-    left: 5.4vw;
-    top: 31.8svh;
+    position: relative;
+    left: auto;
+    top: auto;
     width: 89vw;
-    font-size: 3vw;
-    line-height: 1.3;
-    letter-spacing: 0.5vw;
+    min-height: 0;
+    margin-top: 1.4svh;
+    flex: 0 0 auto;
+    font-size: 2.9vw;
+    line-height: 1.28;
+    letter-spacing: 0.44vw;
   }
 
   .intro {
-    left: 5.4vw;
-    top: 42svh;
+    position: relative;
+    left: auto;
+    top: auto;
     width: 89vw;
+    min-height: 0;
+    margin-top: 7.2svh;
+    flex: 0 0 auto;
     color: #ded1bd;
-    font-size: 3.7vw;
-    line-height: 1.24;
-    letter-spacing: 0.02vw;
+    font-size: 3.45vw;
+    line-height: 1.23;
+    letter-spacing: 0.01vw;
   }
 
   .servicesGrid {
-    position: absolute;
-    left: 5.4vw;
-    right: 5.4vw;
-    top: 64svh;
-    bottom: auto;
+    position: relative;
+    inset: auto;
     display: flex;
+    flex: 0 0 auto;
     flex-direction: column;
-    gap: 1.35svh;
+    gap: 1.55svh;
+    width: 89vw;
+    margin-top: 3.1svh;
   }
 
   .serviceBlock {
     position: relative;
     inset: auto;
-    min-height: auto;
+    min-height: 0;
   }
 
   .serviceDiamond {
     position: absolute;
     left: 0;
-    top: 0.55svh;
-    width: 2.6vw;
-    height: 2.6vw;
+    top: 0.45svh;
     display: block;
+    width: 2.4vw;
+    height: 2.4vw;
   }
 
   .serviceLabel,
   .serviceCopy {
     position: static;
     width: auto;
-    min-height: auto;
+    min-height: 0;
   }
 
   .serviceLabel {
-    padding-left: 5.2vw;
+    padding-left: 4.9vw;
     color: #ded1bd;
     font-family: var(--font-technical);
-    font-size: 2.8vw;
+    font-size: 2.85vw;
     font-weight: 500;
-    line-height: 1.18;
+    line-height: 1.2;
     letter-spacing: 0.18vw;
   }
 
   .serviceCopy {
-    padding-left: 5.2vw;
-    padding-top: 0.25svh;
-    color: #91867a;
-    font-size: 3vw;
-    line-height: 1.18;
+    padding-left: 4.9vw;
+    padding-top: 0.28svh;
+    color: #9b9083;
+    font-size: 3.05vw;
+    line-height: 1.19;
     letter-spacing: 0;
   }
 
   .mobileMotionHint {
     position: absolute;
     left: 5.4vw;
-    bottom: 2svh;
-    z-index: 45;
+    bottom: 1.6svh;
+    z-index: 80;
     display: block;
     margin: 0;
     color: #a83014;
     font-family: var(--font-technical);
-    font-size: 1.75vw;
+    font-size: 1.65vw;
     font-weight: 500;
-    letter-spacing: 0.15vw;
+    letter-spacing: 0.14vw;
     white-space: nowrap;
   }
 }
 
 @media (max-width: 479px) {
   .instrumentCanvas {
-    left: 33vw;
-    top: 11svh;
-    width: 60vw;
-    height: 90vw;
+    left: 59vw;
+    top: 8.5svh;
+    width: 35vw;
+    height: 52.5vw;
+  }
+
+  .outlineState {
+    left: 31vw;
+    top: 10.5svh;
+    font-size: 20vw;
+  }
+
+  .stateCopy {
+    padding: 4.8svh 5.2vw 6svh;
+    background: rgb(4 4 3 / 0.76);
   }
 
   .heading {
-    top: 6svh;
-    width: 56vw;
+    width: 61vw;
+  }
+
+  .mobileHeadingXl {
+    font-size: 12.7vw;
+  }
+
+  .mobileHeadingLg {
+    font-size: 10.9vw;
+  }
+
+  .mobileHeadingMd {
+    font-size: 9.1vw;
   }
 
   .subheading {
-    top: 31svh;
+    margin-top: 1.15svh;
+    font-size: 2.8vw;
   }
 
   .intro {
-    top: 41svh;
-    font-size: 3.55vw;
+    margin-top: 6.7svh;
+    font-size: 3.35vw;
   }
 
   .servicesGrid {
-    top: 63svh;
-    gap: 1.1svh;
+    gap: 1.25svh;
+    margin-top: 2.7svh;
   }
 
   .serviceLabel {
-    font-size: 2.7vw;
+    font-size: 2.75vw;
   }
 
   .serviceCopy {
-    font-size: 2.85vw;
+    font-size: 2.92vw;
   }
 }
 

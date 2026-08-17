@@ -65,7 +65,7 @@ const piecePresentation = {
     entry: { x: "35vw", y: "-1vh", scale: 0.985, rotation: 1.4 },
   },
   "TS_lens.png": {
-    z: 23,
+    z: 40,
     lock: { x: "0.2vw", y: "-0.1vh", scale: 1, rotation: 0 },
     entry: { x: "12vw", y: "-9vh", scale: 0.92, rotation: 1.4 },
   },
@@ -75,7 +75,7 @@ const piecePresentation = {
     entry: { x: "-2vw", y: "13vh", scale: 0.93, rotation: -1.3 },
   },
   "TS_disp.png": {
-    z: 30,
+    z: 24,
     lock: { x: "0.15vw", y: "1.1vh", scale: 1, rotation: 0 },
     entry: { x: "13vw", y: "14vh", scale: 0.92, rotation: 1.2 },
   },
@@ -762,8 +762,8 @@ export function Body() {
                   data-body-outline={state.index}
                   style={textVars(layout.outline)}
                 >
-                  <span>{state.outline}</span>
-                  <span>{state.outline}</span>
+                  <span className={styles.outlineUpper}>{state.outline}</span>
+                  <span className={styles.outlineLower}>{state.outline}</span>
                 </div>
               );
             })}
