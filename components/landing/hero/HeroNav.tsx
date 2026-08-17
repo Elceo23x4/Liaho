@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { landingContent } from "@/content/landing";
 
+import { HireUnderlineVector } from "./HeroVectorArt";
 import { PearlNavigationBridge } from "./PearlNavigationBridge";
 
 export function HeroNav() {
@@ -20,16 +20,7 @@ export function HeroNav() {
       <Link className="outer-link outer-link-right" href="/hire-us">
         <i className="outer-rule" aria-hidden="true" />
         <span className="outer-label hire-label">HIRE US</span>
-        <Image
-          className="hire-underline"
-          src="/images/hero/gate03-hire-underline-exact.svg"
-          alt=""
-          aria-hidden="true"
-          width={193}
-          height={24}
-          unoptimized
-          draggable={false}
-        />
+        <HireUnderlineVector className="hire-underline" />
       </Link>
 
       <nav className="center-nav" aria-label="Primary">

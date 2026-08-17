@@ -1,9 +1,101 @@
 .root {
-  /* This class is intentionally additive: it leaves the existing responsive
-     implementation intact and applies only the measured Gate 03 corrections. */
+  position: relative;
+  isolation: isolate;
 }
 
-/* Desktop Gate 03 master: 1920 × 1080 */
+/*
+ * The topographic paper belongs to the active HERO/browser field, not the
+ * contained 16:9 master. Keeping it outside the centered canvas prevents the
+ * engraving from stopping at the canvas edges on short/wide desktop viewports.
+ */
+.root > :global([data-parity="paper-field"]) {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    69deg,
+    #f8ebd5 0%,
+    #e8d5b8 50%,
+    #f6ead4 100%
+  );
+  pointer-events: none;
+}
+
+.root > :global([data-parity="paper-field"])::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/images/hero/hero-topography.svg") center / 100% 100% no-repeat;
+  opacity: 1;
+  mix-blend-mode: normal;
+  pointer-events: none;
+}
+
+.root :global([data-parity="hero-canvas"]) {
+  z-index: 1;
+}
+
+/* Inline vector wrappers: no standalone SVG <img> requests for HERO chrome. */
+.root :global(.gate05-nav-bridge),
+.root :global(.dock-material),
+.root :global(.editorial-vessel),
+.root :global(.brand-pod-vector),
+.root :global(.editorial-arrow-art),
+.root :global(.hire-underline) {
+  display: block;
+  line-height: 0;
+}
+
+.root :global(.gate05-nav-bridge > svg),
+.root :global(.dock-material > svg),
+.root :global(.editorial-vessel > svg),
+.root :global(.brand-pod-vector > svg),
+.root :global(.editorial-arrow-art > svg),
+.root :global(.hire-underline > svg) {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+}
+
+.root :global(.brand-pod-vector) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Preserve the Figma two-line editorial title at every responsive master. */
+.root :global(.editorial-copy) {
+  min-width: 0;
+}
+
+.root :global(.editorial-title > span) {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+/*
+ * CSS version of the Gate 03 ground ellipse. This removes the standalone
+ * ground-shadow SVG URL while preserving the proportional blur.
+ */
+.root :global([data-parity="ground-shadow"]) {
+  border-radius: 50%;
+  background: rgb(43 28 18 / .19);
+  filter: blur(.78125cqw);
+}
+
+/* Main reference headline: explicit responsive bounds without changing its two lines. */
+.root :global([data-parity="hero-copy"] h1 span) {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+/* Desktop / Gate 03 + 1440 Gate 05 */
 @media (min-width: 1200px) {
   .root {
     min-height: 100svh;
@@ -11,54 +103,27 @@
     place-items: center;
   }
 
-  /*
-   * Fit against BOTH browser axes. This preserves the complete 16:9 Figma
-   * composition on short desktop viewports instead of clipping the bottom.
-   */
   .root :global([data-parity="hero-canvas"]) {
     width: min(100vw, calc(100svh * 16 / 9), 1920px);
   }
 
-  /*
-   * The legacy CSS paints hero-topography.svg twice. Keep one authoritative
-   * engraving pass only.
-   */
-  .root :global([data-parity="paper-field"]) {
-    background: linear-gradient(
-      69deg,
-      #f8ebd5 0%,
-      #e8d5b8 50%,
-      #f6ead4 100%
-    );
+  .root :global([data-parity="hero-copy"]) {
+    max-width: 64%;
   }
 
-  .root :global([data-parity="paper-field"])::after {
-    opacity: 1;
-    mix-blend-mode: normal;
-  }
-
-  /* Figma node 245:147 — x92 y980 w1740 h72 */
-  .root :global([data-parity="ground-shadow"]) {
-    left: 4.7916667%;
-    top: 90.7407407%;
-    width: 90.625%;
-    height: 6.6666667%;
-    border-radius: 0;
-    background: url("/images/hero/gate03-ground-shadow-exact.svg")
-      center / 100% 100% no-repeat;
-    filter: none;
+  .root :global([data-parity="hero-copy"] h1) {
+    font-size: clamp(52px, 4.5833cqw, 88px);
   }
 
   /*
-   * Right navigation measured from Gate 03:
-   * parent starts x1338 y93;
-   * rule x1338 y117 w170;
-   * HIRE US x1573 y95;
-   * exported red stroke box x1487 y81 w193 h24.
+   * Gate 03 measured right-side geometry:
+   * rule: x1338 y117 w170
+   * HIRE US: x1573 y95
+   * red curve absolute: x1557 y145 w189 h20
    */
   .root :global(.outer-link-right) {
     width: 22.4479cqw;
-    height: 3.75cqw;
+    height: 4.2cqw;
     gap: 0;
   }
 
@@ -77,30 +142,81 @@
 
   .root :global(.outer-link-right .hire-underline) {
     position: absolute;
-    left: 7.7604cqw;
-    top: -.625cqw;
-    width: 10.0521cqw;
-    height: auto;
+    left: 11.40625cqw;
+    top: 2.70833cqw;
+    width: 9.84375cqw;
+    height: 1.25cqw;
     max-width: none;
   }
 
-  /*
-   * Figma title node is two explicit lines:
-   * "Survey plan required"
-   * "at e-Planning screening"
-   */
-  .root :global(.editorial-title span) {
-    display: block;
-  }
-
-  /* Figma deck starts at y849, 18px below the 96px title block. */
+  /* Restores the exact vertical rhythm after the two-line title. */
   .root :global(.editorial-deck) {
     margin-top: .9375cqw;
   }
 
-  /* Figma meta row begins around y943 rather than sitting at copy-box bottom. */
   .root :global(.editorial-meta) {
     top: 86.8%;
     bottom: auto;
+  }
+}
+
+/* Tablet / Gate 05 1024×820 and intermediate widths */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .root :global([data-parity="hero-copy"]) {
+    width: 67%;
+    max-width: 67%;
+  }
+
+  .root :global([data-parity="hero-copy"] h1) {
+    font-size: clamp(40px, 5.4688cqw, 56px);
+  }
+
+  .root :global(.editorial-title) {
+    max-width: 100%;
+  }
+
+  .root :global(.editorial-title > span) {
+    white-space: nowrap;
+  }
+
+  .root :global(.editorial-deck) {
+    max-width: 100%;
+  }
+}
+
+/* Mobile / Gate 05 390×844 and narrower phones */
+@media (max-width: 767px) {
+  .root :global([data-parity="hero-copy"]) {
+    width: 80%;
+    max-width: 80%;
+  }
+
+  .root :global([data-parity="hero-copy"] h1) {
+    font-size: clamp(27px, 8.7179cqw, 34px);
+  }
+
+  .root :global(.editorial-title) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .root :global(.editorial-title > span) {
+    white-space: nowrap;
+  }
+
+  /*
+   * The mobile Figma master is a compact single-story module. Keep the desktop
+   * authored deck breaks from becoming forced mobile lines.
+   */
+  .root :global(.editorial-deck > span) {
+    display: inline;
+  }
+
+  .root :global(.editorial-deck > span:not(:last-child)::after) {
+    content: " ";
+  }
+
+  .root :global(.editorial-meta) {
+    max-width: 100%;
   }
 }

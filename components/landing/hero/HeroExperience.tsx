@@ -93,12 +93,13 @@ export function HeroExperience() {
         onPointerCancel={endDrag}
         aria-labelledby="hero-heading"
       >
+        <div
+          className={styles.paperField}
+          data-parity="paper-field"
+          aria-hidden="true"
+        />
+
         <div className={styles.canvas} data-parity="hero-canvas">
-          <div
-            className={styles.paperField}
-            data-parity="paper-field"
-            aria-hidden="true"
-          />
           <div
             className={styles.groundShadow}
             data-parity="ground-shadow"

@@ -1,21 +1,11 @@
-import Image from "next/image";
+import { ForestDockVector } from "./HeroVectorArt";
 
 type Props = { onOpen: () => void };
 
 export function CompassDock({ onOpen }: Props) {
   return (
     <div className="dock-shell">
-      <Image
-        className="dock-material"
-        src="/images/hero/gate05-forest-dock.svg"
-        alt=""
-        aria-hidden="true"
-        width={99}
-        height={470}
-        unoptimized
-        draggable={false}
-        priority
-      />
+      <ForestDockVector className="dock-material" />
       <button
         type="button"
         className="dock-button"

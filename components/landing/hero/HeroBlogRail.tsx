@@ -1,6 +1,10 @@
-import Image from "next/image";
-
 import { landingContent } from "@/content/landing";
+
+import {
+  BrandPodVector,
+  EditorialArrowVector,
+  EditorialVesselVector,
+} from "./HeroVectorArt";
 
 const editorialHeadline = [
   "Survey plan required",
@@ -18,27 +22,10 @@ export function HeroBlogRail() {
 
   return (
     <article className="editorial-assembly">
-      <Image
-        className="editorial-vessel"
-        src="/images/hero/gate05-editorial-vessel.svg"
-        alt=""
-        aria-hidden="true"
-        width={541}
-        height={278}
-        unoptimized
-        draggable={false}
-      />
+      <EditorialVesselVector className="editorial-vessel" />
 
       <div className="brand-pod">
-        <Image
-          src="/images/hero/gate05-brand-pod.svg"
-          alt=""
-          aria-hidden="true"
-          width={73}
-          height={279}
-          unoptimized
-          draggable={false}
-        />
+        <BrandPodVector className="brand-pod-vector" />
         <span className="brand-pod-liahona">LIAHONA</span>
         <span className="brand-pod-services">GEOSERVICES</span>
       </div>
@@ -50,6 +37,7 @@ export function HeroBlogRail() {
           href={story.href}
           target="_blank"
           rel="noreferrer"
+          aria-label="Survey plan required at e-Planning screening"
         >
           {editorialHeadline.map((line) => (
             <span key={line}>{line}</span>
@@ -72,14 +60,7 @@ export function HeroBlogRail() {
         rel="noreferrer"
         aria-label="Open planning and approvals source"
       >
-        <Image
-          src="/images/hero/gate03-story-arrow-exact.svg"
-          alt=""
-          width={58}
-          height={58}
-          unoptimized
-          draggable={false}
-        />
+        <EditorialArrowVector className="editorial-arrow-art" />
       </a>
     </article>
   );
