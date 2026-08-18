@@ -167,12 +167,12 @@ function Brand({
 
   return (
     <>
-      <div className={styles.brandPlaque} style={p(...plaque)}>
+      <div className={styles.brandPlaque} style={p(plaque[0], plaque[1], plaque[2], plaque[3])}>
         <BrandPlaqueArt />
       </div>
       <Image
         className={`${styles.brandLogo} ${styles.brandLogoBack}`}
-        style={p(...logoBack)}
+        style={p(logoBack[0], logoBack[1], logoBack[2], logoBack[3])}
         src="/brand/logo.png"
         alt=""
         width={152}
@@ -182,7 +182,7 @@ function Brand({
       />
       <Image
         className={`${styles.brandLogo} ${styles.brandLogoFront}`}
-        style={p(...logoFront)}
+        style={p(logoFront[0], logoFront[1], logoFront[2], logoFront[3])}
         src="/brand/logo.png"
         alt=""
         width={122}
