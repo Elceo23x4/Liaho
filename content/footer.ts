@@ -1,7 +1,7 @@
 export const footerContent = {
   office: {
-    label: "OFFICE ADDRESS:",
-    address: "61, Kudirat Abiola Way, Oregun, Ikeja, Lagos, Nigeria",
+    label: "OFFICE\nADDRESS:",
+    address: "61, Kudirat Abiola Way,\nOregun, Ikeja,\nLagos, Nigeria",
   },
   navigation: {
     team: { label: "TEAM", href: "/team" },
@@ -14,9 +14,21 @@ export const footerContent = {
     whatsappFallback: "2347039347537",
   },
   socials: [
-    { label: "Instagram", href: null },
-    { label: "X", href: null },
-    { label: "LinkedIn", href: null },
-    { label: "TikTok", href: null },
+    {
+      label: "Instagram",
+      href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || null,
+    },
+    {
+      label: "X",
+      href: process.env.NEXT_PUBLIC_X_URL || null,
+    },
+    {
+      label: "LinkedIn",
+      href: process.env.NEXT_PUBLIC_LINKEDIN_URL || null,
+    },
+    {
+      label: "TikTok",
+      href: process.env.NEXT_PUBLIC_TIKTOK_URL || null,
+    },
   ],
 } as const;
