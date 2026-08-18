@@ -101,11 +101,84 @@ function SocialIcon({
   return (
     <span className={styles.socialFace}>
       {kind === "instagram" ? (
-        <span className={styles.instagramGlyph}><i /></span>
+        <svg
+          className={styles.socialGlyphSvg}
+          viewBox="0 0 76 76"
+          aria-hidden="true"
+        >
+          <rect
+            x="21"
+            y="21"
+            width="33"
+            height="33"
+            rx="9"
+            fill="none"
+            stroke="#F2DEC7"
+            strokeWidth="3"
+          />
+          <circle
+            cx="37.5"
+            cy="37.5"
+            r="6.5"
+            fill="none"
+            stroke="#F2DEC7"
+            strokeWidth="3"
+          />
+          <circle cx="49" cy="27" r="2" fill="#FF7D30" />
+        </svg>
       ) : null}
-      {kind === "x" ? <span className={styles.xGlyph} /> : null}
-      {kind === "linkedin" ? <span className={styles.linkedinGlyph}>in</span> : null}
-      {kind === "tiktok" ? <span className={styles.tiktokGlyph} /> : null}
+
+      {kind === "x" ? (
+        <svg
+          className={styles.socialGlyphSvg}
+          viewBox="0 0 82 82"
+          aria-hidden="true"
+        >
+          <line
+            x1="29"
+            y1="25"
+            x2="54"
+            y2="57"
+            stroke="#F5E8D6"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          <line
+            x1="54"
+            y1="25"
+            x2="29"
+            y2="57"
+            stroke="#F5E8D6"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+        </svg>
+      ) : null}
+
+      {kind === "linkedin" ? (
+        <span className={styles.linkedinGlyph}>in</span>
+      ) : null}
+
+      {kind === "tiktok" ? (
+        <svg
+          className={styles.socialGlyphSvg}
+          viewBox="0 0 74 74"
+          aria-hidden="true"
+        >
+          <rect x="38" y="20" width="5" height="30" rx="2" fill="#FFFFFF" />
+          <ellipse cx="34.5" cy="48" rx="8.5" ry="9" fill="#FFFFFF" />
+          <line
+            x1="43"
+            y1="26"
+            x2="55.3"
+            y2="17.5"
+            stroke="#FBFBFB"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+        </svg>
+      ) : null}
+
       <span className={styles.srOnly}>{label}</span>
     </span>
   );
@@ -156,33 +229,24 @@ function Brand({
 }) {
   const p = mobileMode ? mobile : desktop;
   const plaque = mobileMode
-    ? [42, 34, 304.67, 161.31] as const
-    : [62, 186, 430, 220] as const;
-  const logoBack = mobileMode
-    ? [48.56, 66.2, 106.4, 106.4] as const
-    : [66, 232, 152, 152] as const;
-  const logoFront = mobileMode
-    ? [66.76, 60.6, 85.4, 85.4] as const
-    : [92, 224, 122, 122] as const;
+    ? ([42, 34, 304.67, 161.31] as const)
+    : ([62, 186, 430, 220] as const);
+  const logo = mobileMode
+    ? ([66.76, 60.6, 85.4, 85.4] as const)
+    : ([92, 224, 122, 122] as const);
 
   return (
     <>
-      <div className={styles.brandPlaque} style={p(plaque[0], plaque[1], plaque[2], plaque[3])}>
+      <div
+        className={styles.brandPlaque}
+        style={p(plaque[0], plaque[1], plaque[2], plaque[3])}
+      >
         <BrandPlaqueArt />
       </div>
+
       <Image
-        className={`${styles.brandLogo} ${styles.brandLogoBack}`}
-        style={p(logoBack[0], logoBack[1], logoBack[2], logoBack[3])}
-        src="/brand/logo.png"
-        alt=""
-        width={152}
-        height={152}
-        unoptimized
-        draggable={false}
-      />
-      <Image
-        className={`${styles.brandLogo} ${styles.brandLogoFront}`}
-        style={p(logoFront[0], logoFront[1], logoFront[2], logoFront[3])}
+        className={styles.brandLogo}
+        style={p(logo[0], logo[1], logo[2], logo[3])}
         src="/brand/logo.png"
         alt=""
         width={122}
@@ -190,6 +254,7 @@ function Brand({
         unoptimized
         draggable={false}
       />
+
       <span
         className={`${styles.brandText} ${styles.brandName}`}
         style={
@@ -227,45 +292,54 @@ function Brand({
 function Office({ mobileMode = false }: { mobileMode?: boolean }) {
   const p = mobileMode ? mobile : desktop;
 
+  if (mobileMode) {
+    return (
+      <>
+        <section
+          className={styles.officePlaque}
+          style={p(78, 205, 220.53, 88.22)}
+          aria-label="Office address"
+        >
+          <OfficePlaqueArt />
+        </section>
+        <i
+          className={styles.amberMarker}
+          style={p(85.2, 235.96, 6.48, 7.2)}
+          aria-hidden="true"
+        />
+        <span
+          className={`${styles.officeText} ${styles.officeLabel}`}
+          style={p(97.33, 233.42, 45.1, 25.2)}
+        >
+          {footerContent.office.label}
+        </span>
+        <address
+          className={`${styles.officeText} ${styles.officeAddress}`}
+          style={p(142.09, 230.41, 143.49, 51.2)}
+        >
+          {footerContent.office.address}
+        </address>
+      </>
+    );
+  }
+
   return (
     <>
       <section
-        className={styles.officePlaque}
-        style={
-          mobileMode
-            ? p(78, 205, 220.53, 88.22)
-            : p(510.26, 122, 302.26, 111.01, -2.2)
-        }
+        className={`${styles.officePlaque} ${styles.officePlaqueDesktop}`}
+        style={p(510.2616, 122, 302.2576, 111.0133, -2.2)}
         aria-label="Office address"
       >
         <OfficePlaqueArt />
+        <i className={styles.officeMarkerInside} aria-hidden="true" />
+        <span className={styles.officeLabelInside}>
+          {footerContent.office.label}
+        </span>
       </section>
-      <i
-        className={styles.amberMarker}
-        style={
-          mobileMode
-            ? p(85.2, 235.96, 6.48, 7.2)
-            : p(525, 169, 9, 10)
-        }
-        aria-hidden="true"
-      />
-      <span
-        className={`${styles.officeText} ${styles.officeLabel}`}
-        style={
-          mobileMode
-            ? p(97.33, 233.42, 45.1, 25.2)
-            : p(542.1, 166.64, 60, 33)
-        }
-      >
-        {footerContent.office.label}
-      </span>
+
       <address
-        className={`${styles.officeText} ${styles.officeAddress}`}
-        style={
-          mobileMode
-            ? p(142.09, 230.41, 143.49, 51.2)
-            : p(609.58, 163.01, 188.16, 59)
-        }
+        className={`${styles.officeText} ${styles.officeAddress} ${styles.officeAddressDesktop}`}
+        style={p(601.2672, 156, 193, 57)}
       >
         {footerContent.office.address}
       </address>

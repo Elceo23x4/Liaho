@@ -11,6 +11,15 @@
   overflow: clip;
   background: var(--footer-black);
   isolation: isolate;
+  z-index: 80;
+}
+
+@media (min-width: 768px) {
+  .root {
+    /* Let the excavator/terrain rise into the final BODY state instead of
+       starting only after BODY has ended. */
+    margin-top: clamp(-118px, -5.8vw, -70px);
+  }
 }
 
 .srOnly {
@@ -143,16 +152,8 @@
     drop-shadow(0 0 0.12cqw rgb(255 245 227 / 0.08));
 }
 
-.brandLogoBack {
-  z-index: 13;
-  opacity: 0.8;
-  filter:
-    grayscale(0.15)
-    contrast(1.08)
-    drop-shadow(0 0.23cqw 0.28cqw rgb(0 0 0 / 0.78));
-}
-
-.brandLogoFront {
+/* One brand logo only. The earlier web pass duplicated the same bitmap. */
+.brandLogo {
   z-index: 14;
 }
 
@@ -198,6 +199,7 @@
 
 .officeLabel {
   color: rgb(217 218 217 / 0.95);
+  white-space: pre-line;
   font-family: var(--font-jaini), var(--font-jockey), sans-serif;
   font-size: 0.8333cqw;
   font-weight: 400;
@@ -209,6 +211,7 @@
 
 .officeAddress {
   margin: 0;
+  white-space: pre-line;
   color: var(--footer-address);
   font-family: var(--font-jockey), var(--font-instrument), sans-serif;
   font-size: 1.0417cqw;
@@ -219,6 +222,47 @@
   transform: rotate(-1.274deg);
   transform-origin: left top;
   text-shadow: 0 0.15625cqw 0.2083cqw rgb(0 0 0 / 0.74);
+}
+
+
+.officePlaqueDesktop {
+  overflow: visible;
+}
+
+.officeLabelInside {
+  position: absolute;
+  left: 8.1848%;
+  top: 29.7936%;
+  z-index: 4;
+  width: 21.835%;
+  height: 24.321%;
+  color: rgb(255 255 255 / 0.95);
+  font-family: var(--font-jaini), var(--font-jockey), sans-serif;
+  font-size: 0.8333cqw;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.0573cqw;
+  white-space: pre-line;
+  transform: rotate(0.694deg);
+  transform-origin: left top;
+  text-shadow: 0 0.11cqw 0.16cqw rgb(0 0 0 / 0.6);
+}
+
+.officeMarkerInside {
+  position: absolute;
+  left: 5.185%;
+  top: 46.175%;
+  z-index: 4;
+  width: 2.963%;
+  aspect-ratio: 1.054 / 1;
+  border-radius: 50%;
+  background: #2b2019;
+  border: 0.0521cqw solid #d7b48c;
+}
+
+.officeAddressDesktop {
+  transform: rotate(-1.273852deg);
+  transform-origin: left top;
 }
 
 .amberMarker,
@@ -254,6 +298,7 @@
   cursor: pointer;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   filter: drop-shadow(0 0.4cqw 0.48cqw rgb(0 0 0 / 0.32));
 }
 
@@ -300,6 +345,33 @@
   z-index: 4;
   width: 3.5%;
   aspect-ratio: 1;
+}
+
+
+.signAction > svg,
+.signAction > .signLabel,
+.signAction > .signMarker,
+.signAction .dustLabel,
+.signAction .dustCloud,
+.signAction .dustCloud i {
+  pointer-events: none;
+}
+
+.signLabel {
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    text-shadow 220ms ease,
+    color 220ms ease;
+  transform-origin: 50% 50%;
+}
+
+.signAction:hover .signLabel,
+.signAction:focus-visible .signLabel {
+  transform: translateY(-50%) translateY(-1px) scale(1.065);
+  color: rgb(237 231 220 / 0.98);
+  text-shadow:
+    0 0.18cqw 0.24cqw rgb(0 0 0 / 0.88),
+    0 0 0.42cqw rgb(231 145 79 / 0.12);
 }
 
 /* subtle survey-earth dust hover */
@@ -370,14 +442,17 @@
   inset: 0;
   display: grid;
   place-items: center;
-  border: 2px solid var(--footer-rim);
+  border: 2px solid rgb(222 191 156);
   border-radius: 50%;
+  /* Exact current Figma radial fill:
+     #2E241F 88% -> #0D0D0F 97% @72% -> #99785C */
   background: radial-gradient(
-    circle at 17% 3%,
-    rgb(46 36 31 / 0.88),
+    circle at 50% 50%,
+    rgb(46 36 31 / 0.88) 0%,
     rgb(13 13 15 / 0.97) 72%,
-    #99785c
+    rgb(153 120 92) 100%
   );
+  /* Figma DROP_SHADOW: x0 / y10 / blur12 / 46% black */
   box-shadow: 0 0.5208cqw 0.625cqw rgb(0 0 0 / 0.46);
   transition:
     transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -392,91 +467,21 @@ a.socialControl:focus-visible .socialFace {
     0 0 0.7cqw rgb(219 133 64 / 0.13);
 }
 
-.instagramGlyph {
-  position: relative;
-  width: 43%;
-  aspect-ratio: 1;
-  border: 0.15625cqw solid #f2dec7;
-  border-radius: 24%;
-  filter: drop-shadow(0 0.15625cqw 0.2083cqw rgb(0 0 0 / 0.9));
-}
-.instagramGlyph::before {
-  content: "";
-  position: absolute;
-  left: 29%;
-  top: 29%;
-  width: 34%;
-  aspect-ratio: 1;
-  border: 0.15625cqw solid #f2dec7;
-  border-radius: 50%;
-}
-.instagramGlyph::after {
-  content: "";
-  position: absolute;
-  right: 9%;
-  top: 9%;
-  width: 12%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #ff7d30;
-}
-
-.xGlyph {
-  position: relative;
-  width: 44%;
-  height: 44%;
-  filter: drop-shadow(0 0.15625cqw 0.2083cqw rgb(0 0 0 / 0.9));
-}
-.xGlyph::before,
-.xGlyph::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
+.socialGlyphSvg {
   width: 100%;
-  height: 5%;
-  border-radius: 999px;
-  background: #f5e7d4;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0.15625cqw 0.2083cqw rgb(0 0 0 / 0.9));
 }
-.xGlyph::before { transform: translate(-50%, -50%) rotate(52deg); }
-.xGlyph::after { transform: translate(-50%, -50%) rotate(128deg); }
 
 .linkedinGlyph {
-  color: #ebdecc;
+  color: rgb(235 222 204);
   font-family: var(--font-instrument), sans-serif;
   font-size: 1.6146cqw;
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.0521cqw;
   filter: drop-shadow(0 0.15625cqw 0.2083cqw rgb(0 0 0 / 0.9));
-}
-
-.tiktokGlyph {
-  position: relative;
-  width: 42%;
-  height: 44%;
-  filter: drop-shadow(0 0.15625cqw 0.2083cqw rgb(0 0 0 / 0.9));
-}
-.tiktokGlyph::before {
-  content: "";
-  position: absolute;
-  left: 45%;
-  top: 3%;
-  width: 16%;
-  height: 76%;
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: 0.31cqw 0.16cqw 0 -0.12cqw #fff;
-}
-.tiktokGlyph::after {
-  content: "";
-  position: absolute;
-  left: 16%;
-  bottom: 0;
-  width: 50%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #fff;
 }
 
 .copyrightDesktop,
@@ -996,23 +1001,13 @@ a.socialControl:focus-visible .socialFace {
     box-shadow: 0 1.5385cqw 1.8462cqw rgb(0 0 0 / 0.46);
   }
 
-  .socialControl .instagramGlyph {
-    border-width: 0.58cqw;
+  .socialControl .socialGlyphSvg {
     filter: drop-shadow(0 0.7692cqw 1.0256cqw rgb(0 0 0 / 0.9));
-  }
-
-  .socialControl .instagramGlyph::before {
-    border-width: 0.52cqw;
   }
 
   .socialControl .linkedinGlyph {
     font-size: 4.8487cqw;
     letter-spacing: -0.16cqw;
-    filter: drop-shadow(0 0.7692cqw 1.0256cqw rgb(0 0 0 / 0.9));
-  }
-
-  .socialControl .xGlyph,
-  .socialControl .tiktokGlyph {
     filter: drop-shadow(0 0.7692cqw 1.0256cqw rgb(0 0 0 / 0.9));
   }
 
