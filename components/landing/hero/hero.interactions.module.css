@@ -1,0 +1,127 @@
+.root {
+  position: relative;
+}
+
+/* CORE VALUES + HIRE US: material pop without disturbing authored geometry. */
+.root :global(.outer-link) {
+  transform-origin: 50% 50%;
+  transition:
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 240ms ease;
+}
+
+.root :global(.outer-link .outer-label) {
+  transition:
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    text-shadow 240ms ease;
+}
+
+.root :global(.outer-link:hover),
+.root :global(.outer-link:focus-visible) {
+  transform: translateY(-0.12cqw) scale(1.045);
+  filter:
+    drop-shadow(0 0.18cqw 0.24cqw rgb(8 5 3 / 0.2))
+    drop-shadow(0 0 0.28cqw rgb(255 231 160 / 0.18));
+}
+
+.root :global(.outer-link:hover .outer-label),
+.root :global(.outer-link:focus-visible .outer-label) {
+  text-shadow:
+    0 0.1cqw 0.18cqw rgb(255 248 226 / 0.28),
+    0 0.2cqw 0.32cqw rgb(12 7 4 / 0.16);
+}
+
+/*
+ * Compass N/S motion.
+ *
+ * The original letters remain inside the authored dock SVG, so hide only SVG
+ * text and render motion-safe overlays in the same positions.
+ */
+.root :global(.dock-material text) {
+  opacity: 0;
+}
+
+.root :global(.dock-bearing-labels) {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: block;
+  pointer-events: none;
+}
+
+.root :global(.dock-bearing) {
+  position: absolute;
+  display: block;
+  margin: 0;
+  color: #f4efdf;
+  font-family: Georgia, var(--font-playfair), serif;
+  font-size: clamp(10px, 0.76cqw, 15px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0.08cqw 0.12cqw rgb(0 0 0 / 0.42);
+  will-change: left, top;
+}
+
+/* N: bearing 000° -> 315° -> 000°. */
+.root :global(.dock-bearing-n) {
+  left: 46.2121%;
+  top: 44.6809%;
+  animation: dockNorthOrbit 3.8s ease-in-out infinite;
+}
+
+/* S: bearing 180° -> 135° -> 180°. */
+.root :global(.dock-bearing-s) {
+  left: 46.2121%;
+  top: 60.8511%;
+  animation: dockSouthOrbit 3.8s ease-in-out infinite;
+}
+
+/* Pause exactly where the letters are while the survey dock is hovered. */
+.root :global(.dock-shell:hover .dock-bearing),
+.root :global(.dock-shell:focus-within .dock-bearing) {
+  animation-play-state: paused;
+}
+
+@keyframes dockNorthOrbit {
+  0%,
+  12%,
+  88%,
+  100% {
+    left: 46.2121%;
+    top: 44.6809%;
+  }
+
+  42%,
+  58% {
+    left: 22.1111%;
+    top: 46.7851%;
+  }
+}
+
+@keyframes dockSouthOrbit {
+  0%,
+  12%,
+  88%,
+  100% {
+    left: 46.2121%;
+    top: 60.8511%;
+  }
+
+  42%,
+  58% {
+    left: 76.3889%;
+    top: 58.2181%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root :global(.outer-link) {
+    transition: none;
+  }
+
+  .root :global(.dock-bearing) {
+    animation: none;
+  }
+}

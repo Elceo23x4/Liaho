@@ -19,6 +19,7 @@ import { HeroVideo, type HeroVideoHandle, getPointerRatio } from "./HeroVideo";
 
 import styles from "./hero.module.css";
 import parityStyles from "./hero.parity.module.css";
+import interactionStyles from "./hero.interactions.module.css";
 
 export function HeroExperience() {
   const rootRef = useRef<HTMLElement>(null);
@@ -85,7 +86,7 @@ export function HeroExperience() {
       <section
         ref={rootRef}
         id="hero"
-        className={`${styles.root} ${parityStyles.root}`}
+        className={`${styles.root} ${parityStyles.root} ${interactionStyles.root}`}
         data-section="hero"
         data-hydrated="false"
         onPointerMove={onPointerMove}
