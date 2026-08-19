@@ -243,8 +243,41 @@ export function Footer() {
             <Social asset="linkedin" label="LinkedIn" href={social.LinkedIn} style={desktop(1749, 288, 102, 102)} scope="linkedin-desktop" />
             <Social asset="tiktok" label="TikTok" href={social.TikTok} style={desktop(1843, 235, 98, 98)} scope="tiktok-desktop" />
 
-            <div className={styles.copyrightDirect} style={desktop(664, 353, 711, 474)}>
-              <Image src="/images/footer/copyright-current.png" alt="© 2026 Liahona Geoservices. Crafted with love by 8DAT." fill sizes="37vw" unoptimized draggable={false} />
+            {/*
+              The source copyright PNG is 711×474 but its visible plaque sits
+              inside the authored 1920×650 footer frame. The old 474px-tall
+              absolutely-positioned box extended to master y=827, so its
+              transparent lower 177px enlarged the document's scrollable
+              overflow and created the blank tail below the footer.
+
+              Clip the desktop wrapper exactly at the authored footer bottom:
+              650 - 353 = 297px. Keep the PNG itself at its original 711×474
+              rendered size so the visible artwork is pixel-for-pixel unchanged.
+            */}
+            <div
+              className={styles.copyrightDirect}
+              style={{
+                ...desktop(664, 353, 711, 297),
+                overflow: "hidden",
+              }}
+            >
+              <Image
+                src="/images/footer/copyright-current.png"
+                alt="© 2026 Liahona Geoservices. Crafted with love by 8DAT."
+                width={711}
+                height={474}
+                sizes="37vw"
+                unoptimized
+                draggable={false}
+                style={{
+                  display: "block",
+                  width: `${711 / 19.2}cqw`,
+                  height: `${474 / 19.2}cqw`,
+                  maxWidth: "none",
+                  objectFit: "fill",
+                  pointerEvents: "none",
+                }}
+              />
             </div>
           </div>
         </div>
