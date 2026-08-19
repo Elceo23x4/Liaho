@@ -76,7 +76,7 @@ const piecePresentation = {
   },
   "TS_disp.png": {
     z: 30,
-    lock: { x: "0.15vw", y: "11.25%", scale: 0.7, rotation: 0 },
+    lock: { x: "0.30vw", y: "30.25%", scale: 0.7, rotation: 0 },
     entry: { x: "13vw", y: "16vh", scale: 0.74, rotation: 1.2 },
   },
   "TS_base.png": {
