@@ -1,0 +1,57 @@
+.root {
+  position: relative;
+}
+
+/*
+ * Animate the ORIGINAL four pointer polygons inside ForestDockVector.
+ *
+ * Existing pointer bearings:
+ *   top    =   0°
+ *   right  =  90°
+ *   bottom = 180°
+ *   left   = 270°
+ *
+ * Every requested target is exactly 45° counter-clockwise from its original
+ * bearing, so one synchronized -45deg rotation around the existing compass
+ * center produces:
+ *
+ *   top:    000° -> 315° -> 000°
+ *   right:  090° -> 045° -> 090°
+ *   bottom: 180° -> 135° -> 180°
+ *   left:   270° -> 225° -> 270°
+ *
+ * The 3.8s timing and hold points match the current N/S letter animation
+ * exactly, keeping the top/bottom pointers synchronized with N and S.
+ */
+.root :global(.dock-material svg g[stroke="#AA7A30"] > path) {
+  transform-box: view-box;
+  transform-origin: 45.75px 243.75px;
+  animation: dockPointerBearingSweep 3.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Hover/focus pauses pointers at their exact current position, same as N/S. */
+.root:hover :global(.dock-material svg g[stroke="#AA7A30"] > path),
+.root:focus-within :global(.dock-material svg g[stroke="#AA7A30"] > path) {
+  animation-play-state: paused;
+}
+
+@keyframes dockPointerBearingSweep {
+  0%,
+  12%,
+  88%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  42%,
+  58% {
+    transform: rotate(-45deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root :global(.dock-material svg g[stroke="#AA7A30"] > path) {
+    animation: none;
+  }
+}

@@ -1,10 +1,11 @@
+import pointerStyles from "./compassPointers.module.css";
 import { ForestDockVector } from "./HeroVectorArt";
 
 type Props = { onOpen: () => void };
 
 export function CompassDock({ onOpen }: Props) {
   return (
-    <div className="dock-shell">
+    <div className={`dock-shell ${pointerStyles.root}`}>
       <ForestDockVector className="dock-material" />
 
       <span className="dock-bearing-labels" aria-hidden="true">
