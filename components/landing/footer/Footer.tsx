@@ -2,395 +2,98 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { type CSSProperties, type ReactNode, useState } from "react";
+import { type CSSProperties, useMemo, useState } from "react";
 
 import { footerContent } from "@/content/footer";
 
 import { ContactEnvelope } from "./ContactEnvelope";
-import {
-  BrandPlaqueArt,
-  OfficePlaqueArt,
-  SignPlaqueArt,
-} from "./FooterVectorArt";
+import { footerFigmaSvg, type FooterFigmaSvgKey } from "./footerFigmaExports";
 import { ScrollToTop } from "./ScrollToTop";
-
 import styles from "./footer.module.css";
 
 type Vars = CSSProperties & Record<`--${string}`, string | number>;
 
-const poles = [
-  [122, 356, 250, -1.5],
-  [426, 354, 252, 1.2],
-  [620.6, 218, 250, 0.7],
-  [739.4, 218, 250, -0.5],
-  [951, 288.11, 250, 0.7],
-  [829.18, 296, 250, -0.5],
-  [648.08, 384, 250, 0.7],
-  [751.92, 384, 250, -0.5],
-  [1314.72, 262, 250, 0.7],
-  [1435.28, 262, 250, -0.5],
-  [1343.44, 358, 250, 0.7],
-  [1452.56, 358, 250, -0.5],
-  [1604, 322, 215, 0],
-  [1701, 268, 215, 0],
-  [1787, 358, 215, 0],
-  [1880, 306, 215, 0],
-] as const;
-
-const dust = [
-  [-12, -2, -26, -18, 2.2, 0],
-  [-7, 3, -18, -27, 1.6, 0.04],
-  [-2, -4, -7, -31, 1.8, 0.08],
-  [4, 2, 10, -26, 1.4, 0.02],
-  [9, -3, 22, -21, 2.1, 0.07],
-  [13, 2, 30, -12, 1.5, 0.1],
-  [-10, 5, -31, -8, 1.2, 0.12],
-  [-3, 5, -13, -19, 1.3, 0.05],
-  [6, 5, 16, -15, 1.7, 0.09],
-  [11, 5, 27, -5, 1.15, 0.03],
-] as const;
-
-const desktop = (x: number, y: number, w: number, h: number, r = 0): Vars => ({
+const desktop = (x: number, y: number, w: number, h: number): Vars => ({
   "--x": `${x / 19.2}cqw`,
   "--y": `${y / 19.2}cqw`,
   "--w": `${w / 19.2}cqw`,
   "--h": `${h / 19.2}cqw`,
-  "--r": `${r}deg`,
 });
 
-const mobile = (x: number, y: number, w: number, h: number, r = 0): Vars => ({
+const mobile = (x: number, y: number, w: number, h: number): Vars => ({
   "--x": `${x / 3.9}cqw`,
   "--y": `${y / 3.9}cqw`,
   "--w": `${w / 3.9}cqw`,
   "--h": `${h / 3.9}cqw`,
-  "--r": `${r}deg`,
 });
 
-function DustLabel({ children }: { children: ReactNode }) {
-  return (
-    <span className={styles.dustLabel}>
-      <span className={styles.dustText}>{children}</span>
-      <span className={styles.dustCloud} aria-hidden="true">
-        {dust.map(([ox, oy, dx, dy, size, delay], index) => (
-          <i
-            key={index}
-            style={
-              {
-                "--ox": `${ox}px`,
-                "--oy": `${oy}px`,
-                "--dx": `${dx}px`,
-                "--dy": `${dy}px`,
-                "--dust-size": `${size}px`,
-                "--dust-delay": `${delay}s`,
-              } as Vars
-            }
-          />
-        ))}
-      </span>
-    </span>
-  );
-}
-
-function SocialIcon({
-  kind,
-  label,
-}: {
-  kind: "instagram" | "x" | "linkedin" | "tiktok";
-  label: string;
-}) {
-  return (
-    <span className={styles.socialFace}>
-      {kind === "instagram" ? (
-        <svg
-          className={styles.socialGlyphSvg}
-          viewBox="0 0 76 76"
-          aria-hidden="true"
-        >
-          <rect
-            x="21"
-            y="21"
-            width="33"
-            height="33"
-            rx="9"
-            fill="none"
-            stroke="#F2DEC7"
-            strokeWidth="3"
-          />
-          <circle
-            cx="37.5"
-            cy="37.5"
-            r="6.5"
-            fill="none"
-            stroke="#F2DEC7"
-            strokeWidth="3"
-          />
-          <circle cx="49" cy="27" r="2" fill="#FF7D30" />
-        </svg>
-      ) : null}
-
-      {kind === "x" ? (
-        <svg
-          className={styles.socialGlyphSvg}
-          viewBox="0 0 82 82"
-          aria-hidden="true"
-        >
-          <line
-            x1="29"
-            y1="25"
-            x2="54"
-            y2="57"
-            stroke="#F5E8D6"
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-          <line
-            x1="54"
-            y1="25"
-            x2="29"
-            y2="57"
-            stroke="#F5E8D6"
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-        </svg>
-      ) : null}
-
-      {kind === "linkedin" ? (
-        <span className={styles.linkedinGlyph}>in</span>
-      ) : null}
-
-      {kind === "tiktok" ? (
-        <svg
-          className={styles.socialGlyphSvg}
-          viewBox="0 0 74 74"
-          aria-hidden="true"
-        >
-          <rect x="38" y="20" width="5" height="30" rx="2" fill="#FFFFFF" />
-          <ellipse cx="34.5" cy="48" rx="8.5" ry="9" fill="#FFFFFF" />
-          <line
-            x1="43"
-            y1="26"
-            x2="55.3"
-            y2="17.5"
-            stroke="#FBFBFB"
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-        </svg>
-      ) : null}
-
-      <span className={styles.srOnly}>{label}</span>
-    </span>
-  );
-}
-
-function SocialControl({
-  kind,
-  label,
-  href,
-  style,
-}: {
-  kind: "instagram" | "x" | "linkedin" | "tiktok";
-  label: string;
-  href: string | null;
-  style: Vars;
-}) {
-  if (href) {
-    return (
-      <a
-        className={styles.socialControl}
-        style={style}
-        href={href}
-        target="_blank"
-        rel="noreferrer"
-        aria-label={label}
-      >
-        <SocialIcon kind={kind} label={label} />
-      </a>
-    );
+function scopeSvgIds(svg: string, scope: string) {
+  const ids = Array.from(svg.matchAll(/\sid="([^"]+)"/g), (match) => match[1]);
+  let scoped = svg;
+  for (const id of ids) {
+    const next = `${id}__${scope}`;
+    scoped = scoped
+      .replaceAll(`id="${id}"`, `id="${next}"`)
+      .replaceAll(`url(#${id})`, `url(#${next})`)
+      .replaceAll(`href="#${id}"`, `href="#${next}"`)
+      .replaceAll(`xlink:href="#${id}"`, `xlink:href="#${next}"`);
   }
+  return scoped;
+}
 
+function FigmaAsset({
+  asset,
+  scope,
+  className = "",
+}: {
+  asset: FooterFigmaSvgKey;
+  scope: string;
+  className?: string;
+}) {
+  const html = useMemo(() => scopeSvgIds(footerFigmaSvg[asset], scope), [asset, scope]);
   return (
     <span
-      className={styles.socialControl}
-      style={style}
-      aria-label={label}
-      aria-disabled="true"
-    >
-      <SocialIcon kind={kind} label={label} />
+      className={`${styles.figmaSvg} ${className}`}
+      aria-hidden="true"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
+}
+
+function Dust() {
+  return (
+    <span className={styles.dustCloud} aria-hidden="true">
+      {Array.from({ length: 10 }, (_, index) => <i key={index} />)}
     </span>
   );
 }
 
-function Brand({
-  mobileMode = false,
-}: {
-  mobileMode?: boolean;
-}) {
-  const p = mobileMode ? mobile : desktop;
-  const plaque = mobileMode
-    ? ([42, 34, 304.67, 161.31] as const)
-    : ([62, 186, 430, 220] as const);
-  const logo = mobileMode
-    ? ([66.76, 60.6, 85.4, 85.4] as const)
-    : ([92, 224, 122, 122] as const);
-
-  return (
-    <>
-      <div
-        className={styles.brandPlaque}
-        style={p(plaque[0], plaque[1], plaque[2], plaque[3])}
-      >
-        <BrandPlaqueArt />
-      </div>
-
-      <Image
-        className={styles.brandLogo}
-        style={p(logo[0], logo[1], logo[2], logo[3])}
-        src="/brand/logo.png"
-        alt=""
-        width={122}
-        height={122}
-        unoptimized
-        draggable={false}
-      />
-
-      <span
-        className={`${styles.brandText} ${styles.brandName}`}
-        style={
-          mobileMode
-            ? p(150.06, 66.9, 152, 41)
-            : p(211, 233, 248, 59)
-        }
-      >
-        LIAHONA
-      </span>
-      <span
-        className={`${styles.brandText} ${styles.brandService}`}
-        style={
-          mobileMode
-            ? p(167.56, 103.3, 156, 24)
-            : p(236, 285, 222, 34)
-        }
-      >
-        GEOSERVICES
-      </span>
-      <span
-        className={`${styles.brandText} ${styles.brandLimited}`}
-        style={
-          mobileMode
-            ? p(250.43, 128.35, 66, 11)
-            : p(363, 324, 94, 18)
-        }
-      >
-        Limited
-      </span>
-    </>
-  );
-}
-
-function Office({ mobileMode = false }: { mobileMode?: boolean }) {
-  const p = mobileMode ? mobile : desktop;
-
-  if (mobileMode) {
-    return (
-      <>
-        <section
-          className={styles.officePlaque}
-          style={p(78, 205, 220.53, 88.22)}
-          aria-label="Office address"
-        >
-          <OfficePlaqueArt />
-        </section>
-        <i
-          className={styles.amberMarker}
-          style={p(85.2, 235.96, 6.48, 7.2)}
-          aria-hidden="true"
-        />
-        <span
-          className={`${styles.officeText} ${styles.officeLabel}`}
-          style={p(97.33, 233.42, 45.1, 25.2)}
-        >
-          {footerContent.office.label}
-        </span>
-        <address
-          className={`${styles.officeText} ${styles.officeAddress}`}
-          style={p(142.09, 230.41, 143.49, 51.2)}
-        >
-          {footerContent.office.address}
-        </address>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <section
-        className={`${styles.officePlaque} ${styles.officePlaqueDesktop}`}
-        style={p(510.2616, 122, 302.2576, 111.0133, -2.2)}
-        aria-label="Office address"
-      >
-        <OfficePlaqueArt />
-        <i className={styles.officeMarkerInside} aria-hidden="true" />
-        <span className={styles.officeLabelInside}>
-          {footerContent.office.label}
-        </span>
-      </section>
-
-      <address
-        className={`${styles.officeText} ${styles.officeAddress} ${styles.officeAddressDesktop}`}
-        style={p(601.2672, 156, 193, 57)}
-      >
-        {footerContent.office.address}
-      </address>
-    </>
-  );
-}
-
-function Sign({
-  mobileMode = false,
-  variant,
+function FigmaSign({
+  asset,
   label,
   href,
   onClick,
-  geometry,
-  dustHover,
+  style,
+  scope,
 }: {
-  mobileMode?: boolean;
-  variant: "team" | "contact" | "site" | "services";
+  asset: "team" | "contact" | "site" | "services";
   label: string;
   href?: string;
   onClick?: () => void;
-  geometry: readonly [number, number, number, number, number?];
-  dustHover?: boolean;
+  style: Vars;
+  scope: string;
 }) {
-  const p = mobileMode ? mobile : desktop;
-  const style = p(
-    geometry[0],
-    geometry[1],
-    geometry[2],
-    geometry[3],
-    geometry[4] ?? 0,
-  );
-  const labelContent = dustHover ? <DustLabel>{label}</DustLabel> : label;
-
   const body = (
     <>
-      <SignPlaqueArt variant={variant} />
-      <span className={`${styles.signLabel} ${styles[`signLabel_${variant}`]}`}>
-        {labelContent}
-      </span>
-      <i className={styles.signMarker} aria-hidden="true" />
+      <FigmaAsset asset={asset} scope={scope} />
+      <Dust />
+      <span className={styles.srOnly}>{label}</span>
     </>
   );
 
   if (href) {
     return (
-      <Link
-        className={`${styles.signAction} ${mobileMode ? styles.mobileSign : ""}`}
-        style={style}
-        href={href}
-      >
+      <Link className={styles.figmaAction} style={style} href={href} aria-label={label}>
         {body}
       </Link>
     );
@@ -399,13 +102,101 @@ function Sign({
   return (
     <button
       type="button"
-      className={`${styles.signAction} ${mobileMode ? styles.mobileSign : ""}`}
+      className={styles.figmaAction}
       style={style}
       onClick={onClick}
-      aria-haspopup={variant === "contact" ? "dialog" : undefined}
+      aria-label={label}
+      aria-haspopup="dialog"
     >
       {body}
     </button>
+  );
+}
+
+function Social({
+  asset,
+  label,
+  href,
+  style,
+  scope,
+}: {
+  asset: "instagram" | "x" | "linkedin" | "tiktok";
+  label: string;
+  href: string | null;
+  style: Vars;
+  scope: string;
+}) {
+  const fallback = {
+    instagram: "https://www.instagram.com/",
+    x: "https://x.com/",
+    linkedin: "https://www.linkedin.com/",
+    tiktok: "https://www.tiktok.com/",
+  }[asset];
+
+  return (
+    <a
+      className={styles.socialFigmaAction}
+      style={style}
+      href={href || fallback}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
+      data-profile-configured={href ? "true" : "false"}
+    >
+      <FigmaAsset asset={asset} scope={scope} />
+    </a>
+  );
+}
+
+function DesktopBrand() {
+  return (
+    <>
+      <div className={styles.figmaLayer} style={desktop(62, 186, 436, 231)}>
+        <FigmaAsset asset="brandPlaque" scope="brand-desktop" />
+      </div>
+      <Image
+        className={styles.brandLogoDirect}
+        style={desktop(92, 224, 122, 122)}
+        src="/brand/logo.png"
+        alt=""
+        width={122}
+        height={122}
+        unoptimized
+        draggable={false}
+      />
+      <div className={styles.figmaLayer} style={desktop(222.371, 251.469, 238.151, 29.084)}>
+        <FigmaAsset asset="liahona" scope="liahona-desktop" />
+      </div>
+      <div className={styles.figmaLayer} style={desktop(245.715, 295.188, 220.371, 18.82)}>
+        <FigmaAsset asset="geoservices" scope="geoservices-desktop" />
+      </div>
+    </>
+  );
+}
+
+function MobileBrand() {
+  return (
+    <>
+      <div className={styles.figmaLayer} style={mobile(42, 34, 305, 162)}>
+        <FigmaAsset asset="brandPlaque" scope="brand-mobile" />
+      </div>
+      <Image
+        className={styles.brandLogoDirect}
+        style={mobile(66.76, 60.6, 85.4, 85.4)}
+        src="/brand/logo.png"
+        alt=""
+        width={86}
+        height={86}
+        unoptimized
+        draggable={false}
+      />
+      <div className={styles.figmaLayer} style={mobile(151.805, 76.928, 149.738, 20.359)}>
+        <FigmaAsset asset="liahona" scope="liahona-mobile" />
+      </div>
+      <div className={styles.figmaLayer} style={mobile(168.063, 107.831, 154.243, 13.174)}>
+        <FigmaAsset asset="geoservices" scope="geoservices-mobile" />
+      </div>
+    </>
   );
 }
 
@@ -420,124 +211,63 @@ export function Footer() {
       <footer className={styles.root} data-section="footer">
         <div className={styles.desktopViewport}>
           <div className={styles.desktopScene}>
-            <div className={styles.desktopTerrain} aria-hidden="true" />
-            <div className={styles.atmosphericVeil} aria-hidden="true" />
-            <div className={styles.edgeVeil} aria-hidden="true" />
-
-            {poles.map(([x, y, h, r], index) => (
-              <i
-                key={index}
-                className={styles.pole}
-                style={desktop(x, y, 9, h, r)}
-                aria-hidden="true"
-              />
-            ))}
-
-            <Brand />
-            <Office />
-
-            <Sign
-              variant="team"
-              label={footerContent.navigation.team.label}
-              href={footerContent.navigation.team.href}
-              geometry={[773, 247.86, 224, 62, 1.5]}
-              dustHover
-            />
-            <Sign
-              variant="contact"
-              label={footerContent.contact.label}
-              onClick={() => setContactOpen(true)}
-              geometry={[582, 330, 236, 64, -1.4]}
-            />
-            <Sign
-              variant="site"
-              label={footerContent.navigation.siteWorks.label}
-              href={footerContent.navigation.siteWorks.href}
-              geometry={[1239, 208.17, 274, 66, 1.5]}
-              dustHover
-            />
-            <Sign
-              variant="services"
-              label={footerContent.navigation.services.label}
-              href={footerContent.navigation.services.href}
-              geometry={[1274, 304, 248, 64, -1.4]}
-              dustHover
-            />
-
-            <SocialControl kind="instagram" label="Instagram" href={social.Instagram} style={desktop(1570, 252, 76, 76)} />
-            <SocialControl kind="x" label="X" href={social.X} style={desktop(1664, 192, 82, 82)} />
-            <SocialControl kind="linkedin" label="LinkedIn" href={social.LinkedIn} style={desktop(1752, 286, 78, 78)} />
-            <SocialControl kind="tiktok" label="TikTok" href={social.TikTok} style={desktop(1846, 233, 74, 74)} />
-
-            <div className={styles.copyrightDesktop} style={desktop(655, 349, 711, 474)}>
+            <div className={styles.terrainStage} aria-hidden="true">
               <Image
-                src="/images/footer/copyright-current.png"
-                alt="© 2026 Liahona Geoservices. Crafted with love by 8DAT."
-                fill
-                sizes="37vw"
+                className={styles.terrainImage}
+                src="/images/footer/footer-terrain.png"
+                alt=""
+                width={1536}
+                height={1024}
                 unoptimized
                 draggable={false}
               />
             </div>
+
+            <div className={`${styles.figmaLayer} ${styles.polesLayer}`} style={desktop(0, 0, 1920, 650)}>
+              <FigmaAsset asset="poles" scope="poles-desktop" />
+            </div>
+
+            <DesktopBrand />
+
+            <div className={styles.figmaLayer} style={desktop(515, 126, 307, 123)}>
+              <FigmaAsset asset="address" scope="address-desktop" />
+            </div>
+
+            <FigmaSign asset="team" label={footerContent.navigation.team.label} href={footerContent.navigation.team.href} style={desktop(782, 246, 226, 68)} scope="team-desktop" />
+            <FigmaSign asset="contact" label={footerContent.contact.label} onClick={() => setContactOpen(true)} style={desktop(589.436, 334, 238, 70)} scope="contact-desktop" />
+            <FigmaSign asset="site" label={footerContent.navigation.siteWorks.label} href={footerContent.navigation.siteWorks.href} style={desktop(1248, 205, 276, 74)} scope="site-desktop" />
+            <FigmaSign asset="services" label={footerContent.navigation.services.label} href={footerContent.navigation.services.href} style={desktop(1281.436, 308, 250, 71)} scope="services-desktop" />
+
+            <Social asset="instagram" label="Instagram" href={social.Instagram} style={desktop(1567, 254, 100, 100)} scope="instagram-desktop" />
+            <Social asset="x" label="X" href={social.X} style={desktop(1661, 194, 106, 106)} scope="x-desktop" />
+            <Social asset="linkedin" label="LinkedIn" href={social.LinkedIn} style={desktop(1749, 288, 102, 102)} scope="linkedin-desktop" />
+            <Social asset="tiktok" label="TikTok" href={social.TikTok} style={desktop(1843, 235, 98, 98)} scope="tiktok-desktop" />
+
+            <div className={styles.copyrightDirect} style={desktop(664, 353, 711, 474)}>
+              <Image src="/images/footer/copyright-current.png" alt="© 2026 Liahona Geoservices. Crafted with love by 8DAT." fill sizes="37vw" unoptimized draggable={false} />
+            </div>
           </div>
         </div>
 
-        <div className={styles.mobileScene}>
-          <div className={styles.mobileTerrain} aria-hidden="true" />
-          <div className={styles.mobileAtmosphericVeil} aria-hidden="true" />
-          <div className={styles.mobileEdgeVeil} aria-hidden="true" />
-          <div className={styles.earthBlend} aria-hidden="true" />
-          <div className={styles.earthBed} aria-hidden="true" />
+        <div className={styles.mobileDirectScene}>
+          <div className={styles.mobileTerrainStage} aria-hidden="true">
+            <Image className={styles.mobileTerrainImage} src="/images/footer/footer-terrain.png" alt="" width={1536} height={1024} unoptimized draggable={false} />
+          </div>
 
-          <Brand mobileMode />
-          <Office mobileMode />
+          <MobileBrand />
+          <div className={styles.figmaLayer} style={mobile(78, 205, 221, 89)}><FigmaAsset asset="address" scope="address-mobile" /></div>
+          <FigmaSign asset="team" label={footerContent.navigation.team.label} href={footerContent.navigation.team.href} style={mobile(20, 320, 163, 49)} scope="team-mobile" />
+          <FigmaSign asset="contact" label={footerContent.contact.label} onClick={() => setContactOpen(true)} style={mobile(202, 320, 162, 48)} scope="contact-mobile" />
+          <FigmaSign asset="site" label={footerContent.navigation.siteWorks.label} href={footerContent.navigation.siteWorks.href} style={mobile(20, 392, 163, 44)} scope="site-mobile" />
+          <FigmaSign asset="services" label={footerContent.navigation.services.label} href={footerContent.navigation.services.href} style={mobile(205, 392, 163, 46)} scope="services-mobile" />
 
-          <Sign
-            mobileMode
-            variant="team"
-            label={footerContent.navigation.team.label}
-            href={footerContent.navigation.team.href}
-            geometry={[20, 320, 162.39, 48.85]}
-            dustHover
-          />
-          <Sign
-            mobileMode
-            variant="contact"
-            label={footerContent.contact.label}
-            onClick={() => setContactOpen(true)}
-            geometry={[202, 320, 161.5, 47.43]}
-          />
-          <Sign
-            mobileMode
-            variant="site"
-            label={footerContent.navigation.siteWorks.label}
-            href={footerContent.navigation.siteWorks.href}
-            geometry={[20, 392, 162.62, 43.16]}
-            dustHover
-          />
-          <Sign
-            mobileMode
-            variant="services"
-            label={footerContent.navigation.services.label}
-            href={footerContent.navigation.services.href}
-            geometry={[205, 392, 162.17, 45.53]}
-            dustHover
-          />
+          <Social asset="instagram" label="Instagram" href={social.Instagram} style={mobile(34.56, 490.76, 62, 62)} scope="instagram-mobile" />
+          <Social asset="x" label="X" href={social.X} style={mobile(116.8, 487.8, 63.6, 63.6)} scope="x-mobile" />
+          <Social asset="linkedin" label="LinkedIn" href={social.LinkedIn} style={mobile(199.68, 489.78, 62.22, 62.22)} scope="linkedin-mobile" />
+          <Social asset="tiktok" label="TikTok" href={social.TikTok} style={mobile(282.56, 490.76, 60.76, 60.76)} scope="tiktok-mobile" />
 
-          <SocialControl kind="instagram" label="Instagram" href={social.Instagram} style={mobile(42, 492, 47.12, 47.12)} />
-          <SocialControl kind="x" label="X" href={social.X} style={mobile(124, 489, 49.2, 49.2)} />
-          <SocialControl kind="linkedin" label="LinkedIn" href={social.LinkedIn} style={mobile(207, 491, 47.58, 47.58)} />
-          <SocialControl kind="tiktok" label="TikTok" href={social.TikTok} style={mobile(290, 492, 45.88, 45.88)} />
-
-          <div className={styles.copyrightMobile} style={mobile(29, 520, 334, 223)}>
-            <Image
-              src="/images/footer/copyright-current.png"
-              alt="© 2026 Liahona Geoservices. Crafted with love by 8DAT."
-              fill
-              sizes="86vw"
-              unoptimized
-              draggable={false}
-            />
+          <div className={styles.copyrightDirect} style={mobile(29, 520, 334, 223)}>
+            <Image src="/images/footer/copyright-current.png" alt="© 2026 Liahona Geoservices. Crafted with love by 8DAT." fill sizes="86vw" unoptimized draggable={false} />
           </div>
         </div>
       </footer>
