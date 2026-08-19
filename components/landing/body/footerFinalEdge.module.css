@@ -1,0 +1,31 @@
+/*
+ * FINAL FOOTER EDGE
+ * -----------------
+ * The direct-Figma footer artwork is already visually correct. The remaining
+ * problem is document flow continuing beneath the visible footer, allowing the
+ * user to scroll the complete footer upward and expose a blank black tail.
+ *
+ * Previous pass applied the negative margin to the first footer child. That
+ * does not reliably reduce the footer element's own contribution to the page
+ * scroll height. This pass moves the collapse to the footer element itself.
+ */
+
+@media (min-width: 768px) {
+  :global(footer[data-section="footer"] > div:first-child) {
+    margin-bottom: 0 !important;
+  }
+
+  :global(footer[data-section="footer"]) {
+    margin-bottom: clamp(-188px, -9vw, -72px) !important;
+  }
+}
+
+/*
+ * Do not alter the dedicated mobile footer composition; it was already
+ * approved and does not exhibit the desktop trailing-flow problem.
+ */
+@media (max-width: 767px) {
+  :global(footer[data-section="footer"]) {
+    margin-bottom: 0 !important;
+  }
+}

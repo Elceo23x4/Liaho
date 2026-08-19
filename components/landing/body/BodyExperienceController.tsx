@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import styles from "./bodyExperienceController.module.css";
+import "./footerFinalEdge.module.css";
 
 const FIRST_STATE_HOLD = 0.095;
 
@@ -34,10 +35,6 @@ export function BodyExperienceController() {
       progressRail.style.setProperty("--body-progress", String(progress));
       progressRail.dataset.active = active ? "true" : "false";
 
-      /*
-       * State 01 copy is intentionally complete the instant BODY pins.
-       * TS_hand remains controlled by the existing GSAP assembly timeline.
-       */
       if (active && progress < FIRST_STATE_HOLD) {
         body.dataset.bodyFirstImmediate = "true";
       } else {
