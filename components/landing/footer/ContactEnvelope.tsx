@@ -38,7 +38,7 @@ export function ContactEnvelope({
       process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, "") ||
       footerContent.contact.whatsappFallback;
     const text = [
-      "LIAHONA WEBSITE ENQUIRY",
+      "SERVICE ENQUIRY",
       "",
       `Name: ${name}`,
       `Email: ${email}`,
@@ -95,7 +95,7 @@ export function ContactEnvelope({
               <header className={styles.letterHeader}>
                 <span>LIAHONA GEOSERVICES</span>
                 <h2 id={titleId}>Send a message</h2>
-                <p>Complete the note and continue directly to WhatsApp.</p>
+                <p>Kindly complete the form and continue directly to WhatsApp.</p>
               </header>
               <form className={styles.contactForm} onSubmit={submit}>
                 <label>
