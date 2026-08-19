@@ -1,75 +1,57 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("Liahona footer parity fix 2", () => {
-  test("desktop address keeps Figma line breaks inside the plaque", async ({ page }) => {
+test.describe("Liahona footer direct Figma export fix 3", () => {
+  test("desktop footer itself is transparent and does not use the old negative black slab overlap", async ({ page }) => {
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.goto("/");
 
     const footer = page.locator("[data-section='footer']");
     await expect(footer).toBeVisible();
 
-    const address = footer.getByText(/61, Kudirat Abiola Way/);
-    await expect(address).toBeVisible();
+    const values = await footer.evaluate((node) => {
+      const style = getComputedStyle(node);
+      return { background: style.backgroundColor, marginTop: style.marginTop, overflow: style.overflow };
+    });
 
-    const whiteSpace = await address.evaluate((node) => getComputedStyle(node).whiteSpace);
-    expect(whiteSpace).toBe("pre-line");
-    await expect(address).toContainText("Lagos, Nigeria");
+    expect(values.background).toBe("rgba(0, 0, 0, 0)");
+    expect(Number.parseFloat(values.marginTop)).toBe(0);
+    expect(values.overflow).toBe("visible");
   });
 
-  test("brand renders one logo image, not duplicated logo layers", async ({ page }) => {
+  test("CONTACT US owns its complete visible plaque hit box", async ({ page }) => {
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.goto("/");
+
+    const contact = page.locator("[data-section='footer']").getByRole("button", { name: "CONTACT US" });
+    await expect(contact).toBeVisible();
+
+    const box = await contact.boundingBox();
+    expect(box).not.toBeNull();
+    if (!box) return;
+
+    // Click near the far-left edge, not merely on the text.
+    await contact.click({ position: { x: 8, y: Math.max(8, box.height / 2) } });
+    await expect(page.getByRole("dialog")).toBeVisible();
+  });
+
+  test("all four complete social rings are anchors", async ({ page }) => {
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.goto("/");
 
     const footer = page.locator("[data-section='footer']");
-    const brandLogos = footer.locator('img[src="/brand/logo.png"]');
-
-    // One desktop + one hidden mobile instance in the DOM.
-    expect(await brandLogos.count()).toBe(2);
+    for (const name of ["Instagram", "X", "LinkedIn", "TikTok"]) {
+      const link = footer.getByRole("link", { name });
+      await expect(link).toBeVisible();
+      await expect(link).toHaveAttribute("href", /.+/);
+    }
   });
 
-  test("contact sign owns its visible hit target", async ({ page }) => {
+  test("office plaque is the direct current Figma SVG export", async ({ page }) => {
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.goto("/");
 
-    const button = page
-      .locator("[data-section='footer']")
-      .getByRole("button", { name: "CONTACT US" });
-
-    await expect(button).toBeVisible();
-
-    const pointerEvents = await button
-      .locator("span")
-      .first()
-      .evaluate((node) => getComputedStyle(node).pointerEvents);
-
-    expect(pointerEvents).toBe("none");
-
-    await button.click({ position: { x: 118, y: 32 } });
-    await expect(page.getByRole("dialog")).toBeVisible();
-  });
-
-  test("desktop footer rises over final BODY section", async ({ page }) => {
-    await page.setViewportSize({ width: 1920, height: 1080 });
-    await page.goto("/");
-
-    const marginTop = await page
-      .locator("[data-section='footer']")
-      .evaluate((node) => Number.parseFloat(getComputedStyle(node).marginTop));
-
-    expect(marginTop).toBeLessThan(-90);
-  });
-
-  test("social rings use current Figma center radial gradient", async ({ page }) => {
-    await page.setViewportSize({ width: 1920, height: 1080 });
-    await page.goto("/");
-
-    const face = page
-      .locator("[data-section='footer']")
-      .locator("span")
-      .filter({ has: page.locator('svg[viewBox="0 0 76 76"]') })
-      .first();
-
-    const background = await face.evaluate((node) => getComputedStyle(node).backgroundImage);
-    expect(background).toContain("radial-gradient");
+    const footer = page.locator("[data-section='footer']");
+    await expect(footer.locator('svg g[id*="EXPORT_ONLY__address"]').first()).toBeVisible();
+    await expect(footer.getByText(/61, Kudirat Abiola Way/).first()).toBeVisible();
   });
 });
