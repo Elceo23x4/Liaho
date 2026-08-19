@@ -5,11 +5,21 @@ import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import { BodyExperienceController } from "@/components/landing/body/BodyExperienceController";
+
 gsap.registerPlugin(ScrollTrigger);
 
 type SmoothScrollProviderProps = {
   children: ReactNode;
 };
+
+function bodyIsPinned() {
+  const body = document.querySelector<HTMLElement>("section[data-scroll-vh]");
+  if (!body) return false;
+
+  const rect = body.getBoundingClientRect();
+  return rect.top <= 1 && rect.bottom >= window.innerHeight - 1;
+}
 
 export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
   useEffect(() => {
@@ -28,6 +38,29 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
       smoothWheel: true,
       syncTouch: false,
       wheelMultiplier: 0.9,
+
+      /*
+       * BODY-only mouse-wheel moderation.
+       *
+       * Lenis exposes virtualScroll specifically for adjusting wheel deltas
+       * before they are consumed. Large wheel deltas are characteristic of a
+       * physical mouse wheel; small trackpad deltas are left untouched.
+       *
+       * Keyboard scrolling never enters this callback and touch scrolling uses
+       * Lenis' touch path, so their current feel is preserved.
+       */
+      virtualScroll: (data) => {
+        if (!data.event.type.includes("wheel")) return;
+        if (!bodyIsPinned()) return;
+
+        const magnitude = Math.abs(data.deltaY);
+
+        if (magnitude >= 72) {
+          data.deltaY *= 0.32;
+        } else if (magnitude >= 40) {
+          data.deltaY *= 0.44;
+        }
+      },
     });
 
     const onLenisScroll = () => ScrollTrigger.update();
@@ -50,5 +83,10 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
     };
   }, []);
 
-  return children;
+  return (
+    <>
+      {children}
+      <BodyExperienceController />
+    </>
+  );
 }
