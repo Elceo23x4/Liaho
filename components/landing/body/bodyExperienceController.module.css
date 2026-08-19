@@ -1,0 +1,272 @@
+/*
+ * BODY experience controller
+ * --------------------------
+ * These rules deliberately target the existing BODY data attributes rather
+ * than replacing the approved BODY component or Figma-authored geometry.
+ */
+
+/* State 01: no blank copy phase. Only TS_hand remains timeline-driven. */
+:global(section[data-scroll-vh][data-body-first-immediate="true"] [data-body-copy="1"]) {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+:global(section[data-scroll-vh][data-body-first-immediate="true"] [data-body-copy="1"] [data-heading-main]) {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+  filter: blur(0) !important;
+  clip-path: inset(0 0 0 0) !important;
+}
+
+:global(section[data-scroll-vh][data-body-first-immediate="true"] [data-body-copy="1"] [data-heading-ghost]) {
+  opacity: 0.14 !important;
+  transform: translate3d(0, 0, 0) !important;
+  filter: blur(0) !important;
+}
+
+:global(section[data-scroll-vh][data-body-first-immediate="true"] [data-body-copy="1"] [data-body-subheading]),
+:global(section[data-scroll-vh][data-body-first-immediate="true"] [data-body-copy="1"] [data-body-intro]),
+:global(section[data-scroll-vh][data-body-first-immediate="true"] [data-body-copy="1"] [data-body-static-meta]) {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+  filter: blur(0) !important;
+}
+
+:global(section[data-scroll-vh][data-body-first-immediate="true"] [data-body-copy="1"] [data-type-char]) {
+  opacity: 1 !important;
+}
+
+:global(section[data-scroll-vh][data-body-first-immediate="true"] [data-body-copy="1"] [data-service-diamond]) {
+  opacity: 1 !important;
+  transform: rotate(45deg) scale(1) !important;
+}
+
+:global(section[data-scroll-vh][data-body-first-immediate="true"] [data-body-outline="1"]) {
+  opacity: 1 !important;
+}
+
+/* Minimal BODY-only progress rail. */
+.progressRail {
+  --body-progress: 0;
+  position: fixed;
+  right: max(7px, env(safe-area-inset-right));
+  top: 50%;
+  z-index: 120;
+  width: 10px;
+  height: min(30svh, 260px);
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+
+.progressRail[data-active="true"] {
+  opacity: 1;
+}
+
+.progressTrack,
+.progressFill,
+.progressMarker {
+  position: absolute;
+  display: block;
+}
+
+.progressTrack {
+  left: 4px;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: rgb(194 79 41 / 0.24);
+}
+
+.progressFill {
+  left: 3px;
+  top: 0;
+  width: 2px;
+  height: calc(var(--body-progress) * 100%);
+  background: rgb(194 79 41 / 0.92);
+  transform-origin: top;
+}
+
+.progressMarker {
+  left: 0;
+  top: calc(var(--body-progress) * 100%);
+  width: 8px;
+  height: 1px;
+  background: rgb(219 207 189 / 0.74);
+  transform: translateY(-50%);
+}
+
+/*
+ * Tablet / browser-resize BODY adaptation.
+ *
+ * The production BODY master is 1920×1080. The old tablet rule kept a
+ * 177.78svh-wide scene, which pushed a large part of the scene outside narrow
+ * viewports. Here the scene becomes viewport-sized while the station is
+ * independently resized with its exact 2:3 aspect ratio.
+ */
+@media (min-width: 768px) and (max-width: 1365px) {
+  :global(section[data-scroll-vh] [data-body-sticky-stage] > div:nth-child(2)) {
+    left: 0 !important;
+    top: 0 !important;
+    width: 100vw !important;
+    height: 100svh !important;
+    container-type: size !important;
+    overflow: hidden !important;
+  }
+
+  :global(section[data-scroll-vh] [data-body-assembly]) {
+    left: 58vw !important;
+    top: 8svh !important;
+    width: min(38vw, 44svh) !important;
+    height: min(57vw, 66svh) !important;
+  }
+
+  :global(section[data-scroll-vh] [data-body-outline]) {
+    left: 27vw !important;
+    top: 11svh !important;
+    width: 72vw !important;
+    height: auto !important;
+    font-size: clamp(118px, 16vw, 210px) !important;
+    line-height: 0.82 !important;
+    letter-spacing: -0.45vw !important;
+  }
+
+  :global(section[data-scroll-vh] [data-body-copy]) {
+    box-sizing: border-box !important;
+    left: 0 !important;
+    right: auto !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 58vw !important;
+    height: 100svh !important;
+    padding: 5.2svh 4.3vw 5.5svh !important;
+    overflow: hidden !important;
+    background:
+      linear-gradient(
+        90deg,
+        rgb(4 4 3 / 0.84) 0%,
+        rgb(4 4 3 / 0.78) 78%,
+        rgb(4 4 3 / 0.18) 94%,
+        transparent 100%
+      ) !important;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
+
+  :global(section[data-scroll-vh] [data-body-copy] > h3[data-text]) {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 48vw !important;
+    height: auto !important;
+    margin: 0 !important;
+    font-size: clamp(48px, 7vw, 86px) !important;
+    line-height: 0.9 !important;
+    letter-spacing: -0.16vw !important;
+  }
+
+  :global(section[data-scroll-vh] [data-body-subheading]) {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 47vw !important;
+    min-height: 0 !important;
+    margin-top: 1.3svh !important;
+    font-size: clamp(12px, 1.6vw, 19px) !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0.22vw !important;
+  }
+
+  :global(section[data-scroll-vh] [data-body-intro]) {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 47vw !important;
+    min-height: 0 !important;
+    margin-top: 5.4svh !important;
+    color: #ded1bd !important;
+    font-size: clamp(15px, 1.9vw, 22px) !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0 !important;
+  }
+
+  :global(section[data-scroll-vh] [data-body-copy] > div) {
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.35svh !important;
+    width: 47vw !important;
+    margin-top: 2.8svh !important;
+  }
+
+  :global(section[data-scroll-vh] [data-body-service]) {
+    position: relative !important;
+    inset: auto !important;
+    min-height: 0 !important;
+  }
+
+  :global(section[data-scroll-vh] [data-service-diamond]) {
+    left: 0 !important;
+    top: 0.45svh !important;
+    width: clamp(9px, 1.2vw, 14px) !important;
+    height: clamp(9px, 1.2vw, 14px) !important;
+  }
+
+  :global(section[data-scroll-vh] [data-body-service] > p) {
+    position: static !important;
+    width: auto !important;
+    min-height: 0 !important;
+  }
+
+  :global(section[data-scroll-vh] [data-body-service] > p:first-of-type) {
+    padding-left: 2.15vw !important;
+    font-size: clamp(12px, 1.45vw, 17px) !important;
+    line-height: 1.18 !important;
+    letter-spacing: 0.08vw !important;
+  }
+
+  :global(section[data-scroll-vh] [data-body-service] > p:last-of-type) {
+    padding-left: 2.15vw !important;
+    padding-top: 0.22svh !important;
+    font-size: clamp(13px, 1.55vw, 18px) !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+  }
+
+  /*
+   * Secondary bottom/technical annotations keep their desktop geometry on the
+   * full master; on tablet reflow they would collide with the readable story.
+   */
+  :global(section[data-scroll-vh] [data-body-copy] [data-body-static-meta]) {
+    display: none !important;
+  }
+}
+
+/* Keep the already-approved mobile BODY composition untouched. */
+@media (max-width: 767px) {
+  .progressRail {
+    right: max(5px, env(safe-area-inset-right));
+    height: 24svh;
+  }
+}
+
+/*
+ * FOOTER final edge:
+ * the direct-Figma footer scene is intentionally overflow-visible so the
+ * excavator can rise into BODY. Its authored visual ends above the 650px flow
+ * box, leaving unused black flow space at the document bottom. Collapse only
+ * that unused desktop flow; the artwork itself remains visible.
+ */
+@media (min-width: 768px) {
+  :global(footer[data-section="footer"] > div:first-child) {
+    margin-bottom: clamp(-176px, -9vw, -68px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressRail {
+    transition: none;
+  }
+}
