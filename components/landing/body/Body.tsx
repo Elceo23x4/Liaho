@@ -884,7 +884,7 @@ export function Body() {
           <ScaleTicks />
 
           <p className={styles.mobileMotionHint}>
-            ACTUAL EXPERIENCE: 900VH PINNED • REVEAL → LOCK → HANDOFF
+            DO NOT IGNORE A SURVEYOR ADVISE
           </p>
         </div>
       </div>
