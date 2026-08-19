@@ -2,33 +2,47 @@
   position: relative;
 }
 
-/* CORE VALUES + HIRE US: material pop without disturbing authored geometry. */
+/*
+ * CORE VALUES + HIRE US
+ * ---------------------
+ * Only the label pops. The rule/line and HIRE US underline stay completely
+ * fixed in their authored Figma positions.
+ */
 .root :global(.outer-link) {
-  transform-origin: 50% 50%;
-  transition:
-    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    filter 240ms ease;
+  transform: none;
+  filter: none;
 }
 
 .root :global(.outer-link .outer-label) {
+  display: inline-block;
+  transform-origin: 50% 50%;
   transition:
     transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    text-shadow 240ms ease;
+    text-shadow 240ms ease,
+    color 240ms ease;
+  will-change: transform;
 }
 
 .root :global(.outer-link:hover),
 .root :global(.outer-link:focus-visible) {
-  transform: translateY(-0.12cqw) scale(1.045);
-  filter:
-    drop-shadow(0 0.18cqw 0.24cqw rgb(8 5 3 / 0.2))
-    drop-shadow(0 0 0.28cqw rgb(255 231 160 / 0.18));
+  transform: none;
+  filter: none;
 }
 
 .root :global(.outer-link:hover .outer-label),
 .root :global(.outer-link:focus-visible .outer-label) {
+  transform: translateY(-0.12cqw) scale(1.055);
+  color: inherit;
   text-shadow:
     0 0.1cqw 0.18cqw rgb(255 248 226 / 0.28),
     0 0.2cqw 0.32cqw rgb(12 7 4 / 0.16);
+}
+
+/* Explicitly lock the decorative line/underline during hover. */
+.root :global(.outer-link .outer-rule),
+.root :global(.outer-link .hire-underline) {
+  transform: none !important;
+  filter: none !important;
 }
 
 /*
@@ -64,21 +78,18 @@
   will-change: left, top;
 }
 
-/* N: bearing 000° -> 315° -> 000°. */
 .root :global(.dock-bearing-n) {
   left: 46.2121%;
   top: 44.6809%;
   animation: dockNorthOrbit 3.8s ease-in-out infinite;
 }
 
-/* S: bearing 180° -> 135° -> 180°. */
 .root :global(.dock-bearing-s) {
   left: 46.2121%;
   top: 60.8511%;
   animation: dockSouthOrbit 3.8s ease-in-out infinite;
 }
 
-/* Pause exactly where the letters are while the survey dock is hovered. */
 .root :global(.dock-shell:hover .dock-bearing),
 .root :global(.dock-shell:focus-within .dock-bearing) {
   animation-play-state: paused;
@@ -117,7 +128,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .root :global(.outer-link) {
+  .root :global(.outer-link .outer-label) {
     transition: none;
   }
 
