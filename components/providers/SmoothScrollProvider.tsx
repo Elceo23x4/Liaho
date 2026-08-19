@@ -50,8 +50,13 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
        * Lenis' touch path, so their current feel is preserved.
        */
       virtualScroll: (data) => {
-        if (!data.event.type.includes("wheel")) return;
-        if (!bodyIsPinned()) return;
+        /*
+         * Lenis 1.3.25 types this callback as boolean-returning.
+         * Returning true lets Lenis continue consuming/smoothing the event;
+         * returning false would bypass smoothing for that event.
+         */
+        if (!data.event.type.includes("wheel")) return true;
+        if (!bodyIsPinned()) return true;
 
         const magnitude = Math.abs(data.deltaY);
 
@@ -60,6 +65,8 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
         } else if (magnitude >= 40) {
           data.deltaY *= 0.44;
         }
+
+        return true;
       },
     });
 
